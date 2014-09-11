@@ -1,0 +1,14 @@
+Les différents programmes ici présents servent tous à vérifier le résultat du
+problème suivant :
+  On crée un triangle de nombres. Sur la première ligne, on place les entiers
+  de 1 à 100. Sur la deuxième ligne, on place les 99 nombres obtenus en
+  effectuant les sommes de deux entiers consécuutifs de la première ligne. On
+  procède ainsi de suite jusqu'à la dernière ligne, qui ne possède qu'un seul
+  nombre. Quelle est la valeur de ce nombre ?
+
+Sont présentées trois programmes apportant un solution :
+ - dm1.py : un script python3.
+ - dm1.pl : un script perl.
+ - dm1.hs : un programme Haskell. Doit être compilé, par exemple avec GHC pour
+            fonctionner.
+
