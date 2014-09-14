@@ -1,0 +1,17 @@
+# Python files
+__pycache__/
+*.py[cod]
+
+# Haskell files
+dist
+cabal-dev
+*.o
+*.hi
+*.chi
+*.chi.h
+.virtualenv
+.hsenv
+.cabal-sandbox
+cabal.sandbox.config
+cabal.config
+
