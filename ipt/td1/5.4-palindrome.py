@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 
 def prepare(chaine):
+    """
+    Enlève les caractères blancs et met la chaine en minuscule.
+    """
     chaine2 = ""
     for l in chaine:
         if l not in {' ', '\n', '\t'}:
@@ -8,6 +11,9 @@ def prepare(chaine):
     return chaine2.lower()
 
 def palindrome(chaine):
+    """
+    Indique si la chaine est un palindrome.
+    """
     chaine2 = list(prepare(chaine))
     l = len(chaine2)
     for i in range(0, l):
@@ -16,6 +22,9 @@ def palindrome(chaine):
     return True
 
 def longest(chaine):
+    """
+    Retourne le plus long palindrome trouvé en lisant la chaine dans un sens.
+    """
     ch2    = list(prepare(chaine))
     l      = len(ch2)
     pal    = ""
@@ -53,6 +62,9 @@ def longest(chaine):
         return pal + pal[::-1]
 
 def lgstpal(chaine):
+    """
+    Retourne le plus long palindrome trouvé dans la chaine.
+    """
     if palindrome(chaine):
         return chaine
     pal1 = longest(chaine)
