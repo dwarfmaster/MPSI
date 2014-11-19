@@ -5,6 +5,7 @@ __pycache__/
 # Haskell files
 dist
 cabal-dev
+*.prog
 *.o
 *.hi
 *.chi
