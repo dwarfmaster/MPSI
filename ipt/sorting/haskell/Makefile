@@ -1,4 +1,4 @@
-PROGS=quicksort.prog
+PROGS=quicksort.prog select.prog
 
 all: $(PROGS)
 
