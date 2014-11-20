@@ -1,0 +1,33 @@
+\documentclass[11pt,a4paper,twoside,openright]{book}
+\input{preambule/preambule.tex}
+
+\begin{document}
+\frontmatter
+\pagestyle{front}
+\input{couverture/couverture.tex}  % la couverture
+\thispagestyle{empty}              % page de garde blanche
+\input{couverture/titre.tex}       % page de titre
+\input{couverture/resume.tex}      % le résumé
+\shorttableofcontents{Sommaire}{0} % Un cours sommaire
+\addcontentsline{toc}{chapter}{Sommaire} % Ajout du sommaire dans le sommaire
+
+%% Corps du document %%
+\mainmatter
+\pagestyle{main}
+% TODO
+\cleardoublepage
+
+%% Annexes %%
+\appendix
+\pagestyle{back}
+% TODO
+\backmatter
+% TODO : nomenclature
+\listoftables
+\addcontentsline{toc}{chapter}{Liste des tableaux}
+% TODO liste des théorèmes, liste des lemme ...
+
+%% Quatrieme de couverture %%
+\input{couverture/last.tex}
+\end{document}
+

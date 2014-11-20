@@ -1,0 +1,45 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage[left=3.5cm,right=2cm,top=2cm,bottom=2.5cm]{geometry}
+\usepackage[french]{babel}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{shorttoc}
+
+%%%%%%%%%%%% En-têtes %%%%%%%%%%%%
+\usepackage{fancyhdr}
+\setlength{\headheight}{14.2pt} % Hauteur de l'en-tête
+
+%% Style front %%
+\fancypagestyle{front}{
+    \fancyhf{} % On vide l'en-tête
+    \fancyfoot[C]{page \thepage}
+    \renewcommand{\headrulewidth}{0pt} % Largeur du trait horizontal de l'en-tête
+    \renewcommand{\footrulewidth}{0.4pt} % Largeur du trait pour le pied de page
+}
+
+%% Style main %%
+\fancypagestyle{main}{
+    \fancyhf{}
+    \renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter.\ ##1}{}}
+    \renewcommand{\sectionmark}[1]{\markright{\thesection\ ##1}}
+    \fancyhead[C]{}
+    \fancyhead[RO,LE]{\rightmark}
+    \fancyhead[LO,RE]{\leftmark}
+    \fancyfoot[C]{}
+    \fancyfoot[RO,LE]{page \thepage}
+    \fancyfoot[LO,RE]{}
+}
+
+%% Style back %%
+\fancypagestyle{back}{
+    \fancyhf{}
+    \fancyfoot[C]{page \thepage}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0.4pt}
+}
+
+%%%%%%%%%%%%%% Inclusions persos %%%%%%%%%%%%%%
+\input{preambule/abstract.tex}
+
