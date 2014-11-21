@@ -1,0 +1,31 @@
+\chapter{Corps des nombres réels\\Propriété de la borne supérieure}
+%TODO intro
+
+\section{Propriété de la borne supérieure}
+\begin{theorem}{Borne supérieure}
+Toute partie de $\mathbb{R}$ non vide et majorée admet une borne supérieure.
+\end{theorem}
+
+\begin{propriete}{Caractérisation de la borne supérieure}
+    Soit $A\in\mathcal{P}(\mathbb{R})\backslash\{\emptyset\}$ tel que $M(A)\neq\emptyset$ :
+    \[ \sigma = \sup(A) \Leftrightarrow\begin{array}{|l}\forall a\in A, a\leq\sigma \\
+\forall\epsilon\in\mathbb{R}_+^*,\exists a_\epsilon\in A:\sigma<a_\epsilon+\epsilon \end{array} \]
+\remarque $\sigma = \sup A \Rightarrow \forall\epsilon\in\mathbb{R}_+^*, \exists a_\epsilon\in A:a_\epsilon\leq\sigma\leq a_\epsilon + \epsilon$
+\end{propriete}
+
+\begin{demo}
+    \begin{itemize}
+        \item[$\Rightarrow$] Supposons $\sigma = \sup A$: \begin{itemize}
+                \item $\sigma = \sup A \Rightarrow \sigma\in M(A)$ donc $\forall a\in A, a\leq\sigma$.
+                \item Raisonnons par l'absurde. Supposons $\exists \epsilon_0\in\mathbb{R}_+^* : \forall a\in A, \sigma \geq a+\epsilon\ (*)$. On pense $\sigma - \epsilon_0$ comme un majorant de $A$ inférieur à $\sigma$, ce qui contredit $\sigma = \sup A = \min M(A)$. \begin{itemize}
+                        \item Montrons que $\sigma - \epsilon_0$ majore $A$. Soit $a\in A$ fixé quelconque. Appliquons $(*)$. On trouve $\sigma \geq a+\epsilon_0 \Leftrightarrow \sigma-\epsilon_0\geq a$, donc $\sigma - \epsilon_0$ majore.
+                        \item Puisque $\sigma - \epsilon_0$ est un majorant, on a $\sigma - \epsilon_0\geq \min M(A) \Leftrightarrow \sigma - \epsilon_0 \geq \sigma \Leftrightarrow \epsilon_0 \leq 0 \Rightarrow $ contradiction.
+                    \end{itemize}
+            \end{itemize}
+        \item[$\Leftarrow$] Soit $\sigma\in\mathbb{R}$ tel que $\begin{array}{|l} \forall a\in A, a\leq \sigma\\\forall\epsilon\in\mathbb{R}_+^*,\exists a_\epsilon\in A: \sigma<a_\epsilon + \epsilon \end{array}$
+                La propriété de la borne supérieure appliquée à $A$ prouve que $\sup A$ existe. De plus, $\sigma\in M(A)$, or par définition $\sup A = \min M(A)$, donc $\sigma\geq\sup A$. Supposons que $\sigma > \sup A$. Posons $\epsilon_0 = \sigma-\sup A$. Prenons $a\in A$, on a $a\leq\sup A$, donc $a+\epsilon_0\leq\sup A+\epsilon_0 \Leftrightarrow a+\epsilon_0\leq 0 \Rightarrow$ contradiction, donc $\sigma\leq\sup A$.
+
+                On a $\sigma\leq\sup A$ et $\sigma\geq\sup A$, donc $\sigma = \sup A$.
+    \end{itemize}
+\end{demo}
+
