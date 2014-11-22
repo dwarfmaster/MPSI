@@ -1,0 +1,54 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
+\usepackage[left=3cm, right=3cm, bottom=2cm, top=2cm]{geometry}
+\usepackage{fixltx2e}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+
+\MakeRobust{\overrightarrow}
+
+\pagestyle{fancy}
+\lhead{MPSI1}
+\rhead{Luc Chabassier}
+
+\title{N-ième dérivé d'un produit\\-- Mathématiques --}
+\author{Chabassier Luc}
+
+\begin{document}
+\maketitle
+
+\paragraph{Données} On considère $(f,g) \in \mathcal{D}^1(\mathbb{R},\mathbb{K})$.
+
+\paragraph{Conjecture} On calcule : \begin{itemize}
+    \item $(fg)' = f'g + fg'$
+    \item $(fg)'' = f''g + f'g' + f'g' + fg'' = f''g + 2f'g' + fg''$
+    \item $(fg)''' = f'''g + f''g' + 2f''g' + 2f'g'' + f'g'' + fg''' = f'''g + 3f''g' + 3f'g'' + fg'''$
+\end{itemize}
+On constate que ces dérivées ressemblent fortement à des binômes de Newton. On décide de le démontrer par récurrence.
+
+\paragraph{Démonstration} On procède par récurrence. On pose :
+\[ \forall n \in \mathbb{N}, P(n) : "(fg)^{(n)} = \sum_{k=0}^n{n\choose k} f^{(k)}g^{(n-k)}" \]
+
+\begin{itemize}
+    \item[*] $(fg)^{(0)} = fg$ et $\sum_{k=0}^0{0\choose k} f^{(k)}g^{(n-k)} = fg$ donc $P(0)$ est vraie.
+    \item[*] On considère $n\in\mathbb{N}$ fixé quelconque tel que $P(n)$ soit vrai. On calcule : \begin{align*}
+            (fg)^{(n+1)} &= \left((fg)^{(n)}\right)' \\
+                         &= \left(\sum_{k=0}^n{n\choose k}f^{(k)}g^{(n-k)}\right)' car\ P(n) \\
+                         &= \sum_{k=0}^n{n\choose k}\left(f^{(k)}g^{(n-k)}\right)' \\
+                         &= \sum_{k=0}^n{n\choose k}f^{(k+1)}g^{(n-k)} + \sum_{k=0}^n{n\choose k}f^{(k)}g^{(n-k+1)} \\
+                         &= \sum_{i=1}^{n+1}{n\choose i-1}f^{(i)}g^{(n-i+1)} + \sum_{k=0}^n{n\choose k}f^{(k)}g^{(n-k+1)} \\ 
+                         &= {n\choose n}f^{(n+1)}g + \sum_{k=1}^nf^{(k)}g^{(n+1-k)}\left[{n\choose k-1} + {n\choose k}\right] + {n\choose 0}fg^{(n+1)} \\
+                         &= {n+1\choose n+1}f^{(n+1)}g + {n+1\choose 0}fg^{(n+1)} + \sum_{k=1}^n{n+1\choose k}f^{(k)}g^{(n+1-k)} \\
+                         &= \sum_{k=0}^{n+1}{n+1\choose k}f^{(k)}g^{((n+1) - k)}
+        \end{align*}
+        On a donc $P(n) \Rightarrow P(n+1)$.
+\end{itemize}
+
+\end{document}
+
