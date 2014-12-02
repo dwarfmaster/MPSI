@@ -70,6 +70,14 @@ def gauss_remove(m, x, y):
     else:
         return False
 
+# Triangularize the matrix with p coeffs using the
+# gauss method
+def gauss_trian(m, p):
+    j = 0
+    for i in range(p):
+        if gauss_remove(m, i, j):
+            j += 1
+
 ######### Main loop ##########
 if __name__ == "__main__":
     n = int(input("Enter n : "))
@@ -89,7 +97,7 @@ if __name__ == "__main__":
     print("Appending seconds to coeffs : ")
     matrix_append(coeffs, seconds)
     output_matrix(coeffs)
-    print("Gauss-remove once :")
-    gauss_remove(coeffs, 0, 0)
+    print("Gauss-triangularize :")
+    gauss_trian(coeffs, p)
     output_matrix(coeffs)
 
