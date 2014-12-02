@@ -7,6 +7,10 @@ import string
 # A matrix is an array of arrays. More precisely, it 
 # is an array of lines
 
+######### Utilities #########
+def is_zero(n):
+    return abs(n) < 1e-10
+
 ######### IO #########
 # Returns the matrix and a boolean indicating the success
 def input_matrix(x, y):
@@ -14,7 +18,7 @@ def input_matrix(x, y):
     for i in range(y):
         print("line", i, end=" : ")
         line = input()
-        row  = [int(s.strip()) for s in line.split()]
+        row  = [float(s.strip()) for s in line.split()]
         if len(row) != x:
             return mat, False
         mat.append(row)
@@ -47,6 +51,25 @@ def matrix_add(m, l1, n, l2):
     for i in range(len(m[0])):
         m[l1][i] += n*m[l2][i]
 
+######### Gauss transformation ########
+# Remove the x-eme element in lines ]y,end[
+# Returns false if it was already removed
+def gauss_remove(m, x, y):
+    piv = None
+    for j in range(y, len(m)):
+        if is_zero(m[j][x]):
+            continue
+        if not piv:
+            piv = m[j][x]
+            if j != y:
+                matrix_swap(m, j, y)
+            continue
+        matrix_add(m, j, -m[j][x]/piv, y)
+    if piv:
+        return True
+    else:
+        return False
+
 ######### Main loop ##########
 if __name__ == "__main__":
     n = int(input("Enter n : "))
@@ -66,10 +89,7 @@ if __name__ == "__main__":
     print("Appending seconds to coeffs : ")
     matrix_append(coeffs, seconds)
     output_matrix(coeffs)
-    print("Swapping line 0 and 1 :")
-    matrix_swap(coeffs, 0, 1)
-    output_matrix(coeffs)
-    print("Soustracting line 1 to line 0 :")
-    matrix_add(coeffs, 1, -1, 0)
+    print("Gauss-remove once :")
+    gauss_remove(coeffs, 0, 0)
     output_matrix(coeffs)
 
