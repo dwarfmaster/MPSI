@@ -26,9 +26,9 @@ def input_matrix(x, y):
 
 def output_matrix(m):
     for i in range(len(m)):
-        print("|  ", end="")
+        print("| ", end="")
         for j in range(len(m[i])):
-            print(m[i][j], end="  ")
+            print(repr(m[i][j]).rjust(6), end=" ")
         print("|")
 
 ######### Matrix manipulation ########
