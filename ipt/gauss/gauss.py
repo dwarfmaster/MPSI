@@ -2,6 +2,7 @@
 
 ######### Imports #######
 import string
+import sys
 
 ######### Type definition #######
 # A matrix is an array of arrays. More precisely, it 
@@ -23,6 +24,24 @@ def input_matrix(x, y):
             return mat, False
         mat.append(row)
     return mat, True
+
+# Reads a matrix from a file : returns the matrix and a boolean indicating the success
+def read_matrix(path):
+    f = open(path, 'r')
+    m = []
+    if not f:
+        return m, False
+    x = -1
+    for line in f:
+        if len(line) == 0 or line[0] == '#':
+            continue
+        row = [float(s.strip()) for s in line.split()]
+        if x < 0:
+            x = len(row)
+        elif len(row) != x:
+            return m, False
+        m.append(row)
+    return m, True
 
 def output_matrix(m):
     for i in range(len(m)):
@@ -80,22 +99,12 @@ def gauss_trian(m, p):
 
 ######### Main loop ##########
 if __name__ == "__main__":
-    n = int(input("Enter n : "))
-    p = int(input("Enter p : "))
-    print("Enter the coeffs :")
-    coeffs, b = input_matrix(p, n)
+    coeffs, b = read_matrix(sys.argv[1])
     if not b:
-        print("You can't even type a correct matrix !")
+        print("Invalid file :", sys.argv[1])
         exit()
-    print("Enter the second members : ")
-    seconds, b = input_matrix(1, n)
-    if not b:
-        print("You can't even type a correct matrix !")
-        exit()
+    p = len(coeffs) - 1
 
-    output_matrix(coeffs)
-    print("Appending seconds to coeffs : ")
-    matrix_append(coeffs, seconds)
     output_matrix(coeffs)
     print("Gauss-triangularize :")
     gauss_trian(coeffs, p)
