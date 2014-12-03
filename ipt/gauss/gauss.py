@@ -31,7 +31,7 @@ def output_results(m):
         else:
             print("        ", end="")
         print("|", end="")
-        for j in range(len(m[i])):
+        for j in range(1, len(m[i])):
             print(repr(m[i][j]).rjust(6), end=" ")
         print("|")
 
