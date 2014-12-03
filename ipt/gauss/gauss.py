@@ -36,18 +36,6 @@ def output_results(m):
         print("|")
 
 ######### IO #########
-# Returns the matrix and a boolean indicating the success
-def input_matrix(x, y):
-    mat = []
-    for i in range(y):
-        print("line", i, end=" : ")
-        line = input()
-        row  = [float(s.strip()) for s in line.split()]
-        if len(row) != x:
-            return mat, False
-        mat.append(row)
-    return mat, True
-
 # Reads a matrix from a file : returns the matrix and a boolean indicating the success
 def read_matrix(path):
     f = open(path, 'r')
@@ -80,13 +68,6 @@ def matrix_swap(m, i1, i2):
         return
     for i in range(len(m[0])):
         m[i1][i], m[i2][i] = m[i2][i], m[i1][i]
-
-# Appends the contents of each line of m2 to each line of m1
-def matrix_append(m1, m2):
-    if len(m1) != len(m2):
-        return
-    for i in range(len(m1)):
-        m1[i].extend(m2[i])
 
 # Add n times the contents of the l2 line to the l1 one
 def matrix_add(m, l1, n, l2):
