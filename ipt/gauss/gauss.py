@@ -26,6 +26,9 @@ def output_results(m):
         print("|", end="")
         print(repr(m[i][0]).rjust(6), end="")
         print(" |", end="")
+        if len(m[i]) == 1:
+            print("")
+            continue
         if i == int(len(m)/2):
             print(" + Vect ", end="")
         else:
