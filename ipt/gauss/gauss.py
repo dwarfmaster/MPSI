@@ -20,6 +20,21 @@ def first_nonzero(l):
             return i
     return len(l)
 
+# Print results
+def output_results(m):
+    for i in range(len(m)):
+        print("|", end="")
+        print(repr(m[i][0]).rjust(6), end="")
+        print(" |", end="")
+        if i == int(len(m)/2):
+            print(" + Vect ", end="")
+        else:
+            print("        ", end="")
+        print("|", end="")
+        for j in range(len(m[i])):
+            print(repr(m[i][j]).rjust(6), end=" ")
+        print("|")
+
 ######### IO #########
 # Returns the matrix and a boolean indicating the success
 def input_matrix(x, y):
@@ -149,16 +164,15 @@ if __name__ == "__main__":
         exit()
     p = len(coeffs[0]) - 1
 
+    print("Solving :")
     output_matrix(coeffs)
-    print("Gauss-triangularize :")
+    print("Triangularized :")
     comp = gauss_trian(coeffs, p)
-    output_matrix(coeffs)
-    print("Base : ")
     base = gauss_base(p, comp)
-    output_matrix(base)
+    output_matrix(coeffs)
     if not gauss_solve(coeffs, base, p):
         print("No solution.")
     else:
         print("Solution : ")
-        output_matrix(base)
+        output_results(base)
 
