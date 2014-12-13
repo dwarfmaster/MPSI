@@ -3,19 +3,48 @@
 use strict;
 use warnings;
 use Math::Trig;
+my $tesselate = !0;
 
 my $output = "output.asy";
 open my $out, ">:encoding(UTF-8)", $output or die "Couldn't open $output";
-print $out "unitsize(10cm);\n";
+print $out "unitsize(10cm);\n" if not $tesselate;
+print $out "unitsize(5cm);\n" if $tesselate;
 
-my $count = 5;
-my (@p1, @p2, @p3);
-@p1 = (0.0, 0.0);
-@p2 = (1.0, 0.0);
-@p3 = (0.5, sqrt(3)/2.0);
-side($out, $count, @p1, @p2);
-side($out, $count, @p2, @p3);
-side($out, $count, @p3, @p1);
+my $count = 4;
+if(not $tesselate) {
+    my (@p1, @p2, @p3);
+    @p1 = (0.0, 0.0);
+    @p2 = (1.0, 0.0);
+    @p3 = (0.5, sqrt(3)/2.0);
+    side($out, $count, @p1, @p2);
+    side($out, $count, @p2, @p3);
+    side($out, $count, @p3, @p1);
+} else {
+    # Left star
+    side($out, $count, (-sqrt(3)/2.0, -.5),  (-sqrt(3)/2.0, .5));
+    side($out, $count, (-sqrt(3)/2.0, .5),   (-sqrt(3), 0.0)),
+    side($out, $count, (-sqrt(3), 0.0),      (-sqrt(3)/2.0, -.5));
+    # Top-left star
+    side($out, $count, (-sqrt(3)/2.0, .5),   (0.0, 1.0));
+    side($out, $count, (0.0, 1.0),           (-sqrt(3)/2.0, 1.5));
+    side($out, $count, (-sqrt(3)/2.0, 1.5),  (-sqrt(3)/2.0, .5));
+    # Top-right star
+    side($out, $count, (0.0, 1.0),           (sqrt(3)/2.0, .5));
+    side($out, $count, (sqrt(3)/2.0, .5),    (sqrt(3)/2.0, 1.5));
+    side($out, $count, (sqrt(3)/2.0, 1.5),   (0.0, 1.0));
+    # Right star
+    side($out, $count, (sqrt(3)/2.0, .5),    (sqrt(3)/2.0, -.5));
+    side($out, $count, (sqrt(3)/2.0, -.5),   (sqrt(3), 0.0));
+    side($out, $count, (sqrt(3), 0.0),       (sqrt(3)/2.0, .5));
+    # Bottom-right star
+    side($out, $count, (sqrt(3)/2.0, -.5),   (0.0, -1.0));
+    side($out, $count, (0.0, -1.0),          (sqrt(3)/2.0, -1.5));
+    side($out, $count, (sqrt(3)/2.0, -1.5),  (sqrt(3)/2.0, -.5));
+    # Bottom-left star
+    side($out, $count, (0.0, -1.0),          (-sqrt(3)/2.0, -.5));
+    side($out, $count, (-sqrt(3)/2.0, -.5),  (-sqrt(3)/2.0, -1.5));
+    side($out, $count, (-sqrt(3)/2.0, -1.5), (0.0, -1.0));
+}
 
 sub side {
     my ($out, $count, @pts) = @_;
@@ -40,9 +69,11 @@ sub middle {
     if($pts[0] != $pts[2]) {
         $u[1] = 1.0;
         $u[0] = ($pts[1] - $pts[3]) / ($pts[2] - $pts[0]);
-    } else {
+    } elsif($pts[1] != $pts[3]) {
         $u[0] = 1.0;
         $u[1] = ($pts[2] - $pts[0]) / ($pts[1] - $pts[3]);
+    } else {
+        return ($pts[0], $pts[1]);
     }
 
     my $fact = sqrt($v[0]*$v[0] + $v[1]*$v[1]);
