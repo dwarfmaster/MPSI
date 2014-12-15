@@ -20,6 +20,70 @@ def first_nonzero(l):
             return i
     return len(l)
 
+######### LaTeX output ########
+# The latex file :
+latex_file = False
+
+# Open the path file and start writing a solution
+# in it.
+def latex_begin(coeffs, path):
+    global latex_file
+    latex_file = open(path, "wt")
+    if not latex_file:
+        return False
+    latex_file.write("\\begin{figure}\n")
+    latex_file.write("\\begin{math}\n")
+    latex_matrix(coeffs)
+    latex_file.write("\\\\")
+    return True
+
+# End the latex presentation and close the file.
+def latex_end(sol):
+    global latex_file
+    if not latex_file:
+        return
+    latex_file.write("\\end{math}\n")
+    if not sol:
+        latex_file.write("There is no solution.\n")
+    else:
+        latex_file.write("The solutions are : ")
+        # TODO
+
+    latex_file.write("\\caption{Solving a linear system}\n")
+    latex_file.write("\\end{figure}\n")
+    latex_file.close()
+    latex_file = None
+
+# Add an intermediary step to the latex file
+def latex_step(m):
+    global latex_file
+    if not latex_file:
+        return
+    latex_file.write("\\Leftrightarrow")
+    latex_matrix(m)
+    latex_file.write("\\\\\n")
+
+# Output a matrix in latex format to the latex file.
+def latex_matrix(m):
+    global latex_file
+    if not latex_file:
+        return
+    latex_file.write("\\left[\\begin{array}{")
+    latex_file.write("c" * len(m[0]))
+    latex_file.write("} ")
+    for j in range(len(m)):
+        for i in range(len(m[j]) - 2):
+            latex_file.write("{} & ".format(m[j][i]))
+        latex_file.write("{} \\\\ ".format(m[j][len(m) - 1]))
+    latex_file.write("\\end{array}\\right]")
+
+    latex_file.write(" = \\left[\\begin{array}{c} ")
+    for j in range(len(m)):
+        latex_file.write("{} \\\\".format(m[j][-1]))
+    latex_file.write(" \\end{array}\\right]")
+    return None
+
+######### IO #########
 # Print results
 def output_results(m):
     for i in range(len(m)):
@@ -38,7 +102,6 @@ def output_results(m):
             print(repr(m[i][j]).rjust(6), end=" ")
         print("|")
 
-######### IO #########
 # Reads a matrix from a file : returns the matrix and a boolean indicating the success
 def read_matrix(path):
     f = open(path, 'r')
@@ -110,6 +173,7 @@ def gauss_trian(m, p):
     for i in range(p):
         if gauss_remove(m, i, j):
             j += 1
+            latex_step(m)
         else:
             comp += [i]
     return comp
@@ -150,13 +214,16 @@ if __name__ == "__main__":
 
     print("Solving :")
     output_matrix(coeffs)
+    latex_begin(coeffs, "latex.matrix")
     print("Triangularized :")
     comp = gauss_trian(coeffs, p)
     base = gauss_base(p, comp)
     output_matrix(coeffs)
     if not gauss_solve(coeffs, base, p):
         print("No solution.")
+        latex_end(None)
     else:
         print("Solution : ")
         output_results(base)
+        latex_end(base)
 
