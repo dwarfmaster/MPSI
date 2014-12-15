@@ -68,19 +68,20 @@ def latex_matrix(m):
     global latex_file
     if not latex_file:
         return
-    latex_file.write("\\left[\\begin{array}{")
-    latex_file.write("c" * len(m[0]))
+    latex_file.write("\\left|\\begin{array}{")
+    latex_file.write("c" * (2*len(m[0]) - 1))
     latex_file.write("} ")
     for j in range(len(m)):
         for i in range(len(m[j]) - 2):
-            latex_file.write("{} & ".format(m[j][i]))
-        latex_file.write("{} \\\\ ".format(m[j][len(m) - 1]))
-    latex_file.write("\\end{array}\\right]")
-
-    latex_file.write(" = \\left[\\begin{array}{c} ")
-    for j in range(len(m)):
-        latex_file.write("{} \\\\".format(m[j][-1]))
-    latex_file.write(" \\end{array}\\right]")
+            if is_zero(m[j][i]):
+                latex_file.write(" & & ")
+            else:
+                latex_file.write("{}x_{} & + & ".format(m[j][i], i)) # TODO handle indices >= 10
+        if is_zero(m[j][-2]):
+            latex_file.write(" & = & {} \\\\\n".format(m[j][-2], len(m[j]) - 2, m[j][-1]))
+        else:
+            latex_file.write("{}x_{} & = & {} \\\\\n".format(m[j][-2], len(m[j]) - 2, m[j][-1]))
+    latex_file.write("\\end{array}\\right.")
     return None
 
 ######### IO #########
