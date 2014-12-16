@@ -1,11 +1,20 @@
 
 OUTPUT=output.asy
 SCRIPT=./sierp.pl
+ASYSCRIPT=sierp.asy
 ASY=asy -noV -noprc -f pdf
 
-all :
+RESULTASY=output.asy.pdf
+RESULTPL=output.perl.pdf
+
+all : $(RESULTPL) $(RESULTASY)
+
+$(RESULTPL) : $(SCRIPT)
 	exec $(SCRIPT)
-	$(ASY) $(OUTPUT)
+	$(ASY) $(OUTPUT) -o $@
+
+$(RESULTASY) : $(ASYSCRIPT)
+	$(ASY) $(ASYSCRIPT) -o $@
 
 clean :
 	@touch $(OUTPUT)
