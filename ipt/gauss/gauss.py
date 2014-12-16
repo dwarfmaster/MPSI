@@ -46,8 +46,20 @@ def latex_end(sol):
     if not sol:
         latex_file.write("There is no solution.\n")
     else:
-        latex_file.write("The solutions are : ")
-        # TODO
+        latex_file.write("The solutions are : \\\n")
+        latex_file.write("\\begin{math}\n")
+        latex_file.write("\\begin{center}\\left(\\begin{array}{c}")
+        for j in range(len(sol)):
+            latex_file.write("{} \\\\ ".format(sol[j][0]))
+        latex_file.write("\\end{array}\\right) + \\left(\\begin{array}{")
+        latex_file.write("c" * len(sol))
+        latex_file.write("}\n")
+        for j in range(len(sol)):
+            for i in range(1, len(sol[j]) - 1):
+                latex_file.write("{} & ".format(sol[j][i]))
+            latex_file.write("{} \\\n".format(sol[j][i]))
+        latex_file.write("\\end{array}\\right)\n")
+        latex_file.write("\\end{math}\n")
 
     latex_file.write("\\caption{Solving a linear system}\n")
     latex_file.write("\\end{figure}\n")
