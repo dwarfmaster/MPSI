@@ -8,10 +8,24 @@ my $script = "exec ../gauss.py";
 my @matrix = ("test1.matrix",
     "test2.matrix",
     "test3.matrix",
+    "test4.matrix",
+    "test5.matrix",
+    "test6.matrix",
+    "test7.matrix",
+    "test8.matrix",
+    "test9.matrix",
+    "test10.matrix",
 );
 my @sols = ("sol1.matrix",
     "sol2.matrix",
     "sol3.matrix",
+    "sol4.matrix",
+    "sol5.matrix",
+    "sol6.matrix",
+    "sol7.matrix",
+    "sol8.matrix",
+    "sol9.matrix",
+    "sol10.matrix",
 );
 my $len = scalar @matrix;
 my $success = 0;
