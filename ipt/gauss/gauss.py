@@ -46,12 +46,18 @@ def latex_end(sol):
     if not sol:
         latex_file.write("There is no solution.\n")
     else:
-        latex_file.write("The solutions are : \\\n")
-        latex_file.write("\\begin{math}\n")
+        latex_file.write("The solutions are : \\\\\n")
+        latex_file.write("\\begin{equation}\n")
+
+        latex_file.write("\\left(\\begin{array}{c}")
+        for j in range(len(sol)):
+            latex_file.write("x_{" + "{}".format(j) + "} \\\\ ")
+        latex_file.write("\\end{array}\\right)\n \\in")
+
         latex_file.write("\\left(\\begin{array}{c}")
         for j in range(len(sol)):
             latex_file.write("{} \\\\ ".format(sol[j][0]))
-        latex_file.write("\\end{array}\\right) + Vect\\left\\{")
+        latex_file.write("\\end{array}\\right) + {\\rm Vect}\\left\\{")
 
         for i in range(1, len(sol[0])):
             latex_file.write("\\left(\\begin{array}{c}\n")
@@ -60,7 +66,7 @@ def latex_end(sol):
             latex_file.write("\n\\end{array}\\right)\n")
 
         latex_file.write("\\right\\}\n")
-        latex_file.write("\\end{math}\n")
+        latex_file.write("\\end{equation}\n")
 
     latex_file.write("\\caption{Solving a linear system}\n")
     latex_file.write("\\end{figure}\n")
@@ -86,16 +92,29 @@ def latex_matrix(m):
     latex_file.write("} ")
     for j in range(len(m)):
         for i in range(len(m[j]) - 2):
-            if is_zero(m[j][i]):
-                latex_file.write(" & & ")
-            else:
-                latex_file.write("{}x_{} & + & ".format(m[j][i], i)) # TODO handle indices >= 10
-        if is_zero(m[j][-2]):
-            latex_file.write(" & = & {} \\\\\n".format(m[j][-2], len(m[j]) - 2, m[j][-1]))
-        else:
-            latex_file.write("{}x_{} & = & {} \\\\\n".format(m[j][-2], len(m[j]) - 2, m[j][-1]))
+            latex_elem(m[j][i], i, True)
+        latex_elem(m[j][-2], len(m[j]) - 2, False)
+        latex_file.write("= & {} \\\\\n".format(m[j][-1]))
     latex_file.write("\\end{array}\\right.")
     return None
+
+# Output a single element to the latex_file
+def latex_elem(e, i, p):
+    global latex_file
+    if is_zero(e):
+        latex_file.write("& ")
+        if p:
+            latex_file.write("& ")
+        return False
+    elif is_zero(e - 1):
+        latex_file.write("x_{" + "{}".format(i) + "} & ")
+    elif is_zero(e + 1):
+        latex_file.write("-x_{" + "{}".format(i) + "} & ")
+    else:
+        latex_file.write("{}".format(e) + "x_{" + "{}".format(i) + "} & ")
+    if p:
+        latex_file.write("+ & ")
+    return True
 
 ######### IO #########
 # Print results
