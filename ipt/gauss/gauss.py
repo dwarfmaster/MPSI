@@ -161,7 +161,7 @@ def matrix_mult(m, l, n):
 ######### Gauss transformation ########
 # Remove the x-eme element in lines ]y,end[
 # Returns false if it was already removed
-def gauss_remove(m, x, y):
+def remove(m, x, y):
     piv = None
     for j in range(y, len(m)):
         if is_zero(m[j][x]):
@@ -180,11 +180,11 @@ def gauss_remove(m, x, y):
 # Triangularize the matrix with p coeffs using the
 # gauss method
 # Returns the list of the complementary vars
-def gauss_trian(m, p):
+def triangularize(m, p):
     j = 0
     comp = []
     for i in range(p):
-        if gauss_remove(m, i, j):
+        if remove(m, i, j):
             j += 1
             latex_step(m)
         else:
@@ -193,7 +193,7 @@ def gauss_trian(m, p):
 
 # Create a base for p variables, comp being the array
 # of the complementary variables
-def gauss_base(p, comp):
+def base(p, comp):
     ret = []
     for l in range(p):
         ret.append((len(comp) + 1) * [0.0])
@@ -202,19 +202,19 @@ def gauss_base(p, comp):
     return ret
 
 # Solve a triangularized linear system, writing the solutions
-# to base, p being the number of variables.
+# to bs, p being the number of variables.
 # Returns False if there are no solutions.
-def gauss_solve(m, base, p):
+def solve(m, bs, p):
     for i in range(len(m) - 1, -1, -1):
         z = first_nonzero(m[i])
         if z > p:
             continue
         elif z == p:
             return False
-        base[z][0] = m[i][p]
+        bs[z][0] = m[i][p]
         for j in range(z+1, p):
-            matrix_add(base, z, -m[i][j], j)
-        matrix_mult(base, z, 1.0/m[i][z])
+            matrix_add(bs, z, -m[i][j], j)
+        matrix_mult(bs, z, 1.0/m[i][z])
     return True
 
 ######### Main loop ##########
@@ -229,14 +229,14 @@ if __name__ == "__main__":
     output_matrix(coeffs)
     latex_begin(coeffs, "latex.matrix")
     print("Triangularized :")
-    comp = gauss_trian(coeffs, p)
-    base = gauss_base(p, comp)
+    comp = triangularize(coeffs, p)
+    bs = base(p, comp)
     output_matrix(coeffs)
-    if not gauss_solve(coeffs, base, p):
+    if not solve(coeffs, bs, p):
         print("No solution.")
         latex_end(None)
     else:
         print("Solution : ")
-        output_results(base)
-        latex_end(base)
+        output_results(bs)
+        latex_end(bs)
 
