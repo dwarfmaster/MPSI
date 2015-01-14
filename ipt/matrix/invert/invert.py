@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
 import sys;
-import gauss;
 import matrix;
 import latex;
+from misc import *;
 
 if __name__ == "__main__":
     # Reading the matrix
@@ -33,20 +33,19 @@ if __name__ == "__main__":
         add[i] = 1
         mat[i] += add
 
-    # Triangularize
-    comp = gauss.triangularize(mat, size)
-    if len(comp) != 0:
-        print("Can't invert the matrix.")
-        latex.enq()
-        latex.output("Can't invert the matrix.\n")
-        latex.end("Inverting the matrix")
-        exit()
-
     # Eliminating
     for i in range(len(mat)):
+        if is_zero(mat[i][i]):
+            print("Can't invert the matrix.")
+            latex.enq()
+            latex.output("Can't invert the matrix.\n")
+            latex.end("Inverting the matrix")
+            exit()
         matrix.mult(mat, i, 1/mat[i][i])
-        for j in range(i):
-            matrix.add(mat, j, -mat[j][i]/mat[i][i], i)
+        for j in range(len(mat)):
+            if j == i:
+                continue
+            matrix.add(mat, j, -mat[j][i], i)
         latex.output("\\\\\\Rightarrow")
         latex.matrix(mat)
 
