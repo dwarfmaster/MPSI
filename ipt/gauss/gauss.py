@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
     print("Solving :")
     matrix.output(coeffs)
-    latex.begin(coeffs, "latex.matrix")
+    latex.begin("latex.matrix")
     latex.beq()
     latex.matrix(coeffs)
     latex.output("\\\\")

@@ -4,7 +4,7 @@ from misc import *;
 # The latex file :
 latex_file = False
 
-def begin(coeffs, path):
+def begin(path):
     """
     Open the path file and start writing a solution in it.
     """
