@@ -1,21 +1,22 @@
 #!/usr/bin/python
 
-import gauss;
 import sys;
+import gauss;
+import matrix;
 
 if __name__ == "__main__":
     # Reading the matrix
     if len(sys.argv) != 2:
         print("Invalid number of arguments : expected 1.")
         exit()
-    mat, b = gauss.read_matrix(sys.argv[1])
+    mat, b = matrix.read(sys.argv[1])
     if not b:
         print("Invalid file :", sys.argv[1])
         exit()
     if len(mat) != len(mat[0]):
         print("Invalid matrix size : expected a square one.")
         exit()
-    gauss.output_matrix(mat)
+    matrix.output(mat)
     print("Inverting ...")
 
     # Adding identity
@@ -33,9 +34,9 @@ if __name__ == "__main__":
 
     # Eliminating
     for i in range(len(mat)):
-        gauss.matrix_mult(mat, i, 1/mat[i][i])
+        matrix.mult(mat, i, 1/mat[i][i])
         for j in range(i):
-            gauss.matrix_add(mat, j, -mat[j][i]/mat[i][i], i)
+            matrix.add(mat, j, -mat[j][i]/mat[i][i], i)
 
     # Output
     invert = []
@@ -43,5 +44,5 @@ if __name__ == "__main__":
         invert += [[0] * size]
         for j in range(size):
             invert[i][j] = mat[i][j + size]
-    gauss.output_matrix(invert)
+    matrix.output(invert)
 
