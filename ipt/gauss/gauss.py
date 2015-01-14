@@ -4,128 +4,12 @@
 import string
 import sys
 import matrix
+import latex
+from misc import *;
 
 ######### Type definition #######
 # A matrix is an array of arrays. More precisely, it 
 # is an array of lines
-
-######### Utilities #########
-def is_zero(n):
-    return abs(n) < 1e-10
-
-def first_nonzero(l):
-    """
-    Returns the index of the first non-zero element or len(l) if the array is full of zeros
-    """
-    for i in range(len(l)):
-        if not is_zero(l[i]):
-            return i
-    return len(l)
-
-######### LaTeX output ########
-# The latex file :
-latex_file = False
-
-def latex_begin(coeffs, path):
-    """
-    Open the path file and start writing a solution in it.
-    """
-    global latex_file
-    latex_file = open(path, "wt")
-    if not latex_file:
-        return False
-    latex_file.write("\\begin{figure}\n")
-    latex_file.write("\\begin{math}\n")
-    latex_matrix(coeffs)
-    latex_file.write("\\\\")
-    return True
-
-def latex_end(sol):
-    """
-    End the latex presentation and close the file.
-    """
-    global latex_file
-    if not latex_file:
-        return
-    latex_file.write("\\end{math}\n")
-    if not sol:
-        latex_file.write("There is no solution.\n")
-    else:
-        latex_file.write("The solutions are : \\\\\n")
-        latex_file.write("\\begin{equation}\n")
-
-        latex_file.write("\\left(\\begin{array}{c}")
-        for j in range(len(sol)):
-            latex_file.write("x_{" + "{}".format(j) + "} \\\\ ")
-        latex_file.write("\\end{array}\\right)\n \\in")
-
-        latex_file.write("\\left(\\begin{array}{c}")
-        for j in range(len(sol)):
-            latex_file.write("{} \\\\ ".format(sol[j][0]))
-        latex_file.write("\\end{array}\\right) + {\\rm Vect}\\left\\{")
-
-        for i in range(1, len(sol[0])):
-            latex_file.write("\\left(\\begin{array}{c}\n")
-            for j in range(len(sol)):
-                latex_file.write("{} \\\\ ".format(sol[j][i]))
-            latex_file.write("\n\\end{array}\\right)\n")
-
-        latex_file.write("\\right\\}\n")
-        latex_file.write("\\end{equation}\n")
-
-    latex_file.write("\\caption{Solving a linear system}\n")
-    latex_file.write("\\end{figure}\n")
-    latex_file.close()
-    latex_file = None
-
-def latex_step(m):
-    """
-    Add an intermediary step to the latex file
-    """
-    global latex_file
-    if not latex_file:
-        return
-    latex_file.write("\\Leftrightarrow")
-    latex_matrix(m)
-    latex_file.write("\\\\\n")
-
-def latex_matrix(m):
-    """
-    Output a matrix in latex format to the latex file.
-    """
-    global latex_file
-    if not latex_file:
-        return
-    latex_file.write("\\left\\{\\begin{array}{")
-    latex_file.write("c" * (2*len(m[0]) - 1))
-    latex_file.write("} ")
-    for j in range(len(m)):
-        for i in range(len(m[j]) - 2):
-            latex_elem(m[j][i], i, True)
-        latex_elem(m[j][-2], len(m[j]) - 2, False)
-        latex_file.write("= & {} \\\\\n".format(m[j][-1]))
-    latex_file.write("\\end{array}\\right.")
-    return None
-
-def latex_elem(e, i, p):
-    """
-    Output a single element to the latex_file
-    """
-    global latex_file
-    if is_zero(e):
-        latex_file.write("& ")
-        if p:
-            latex_file.write("& ")
-        return False
-    elif is_zero(e - 1):
-        latex_file.write("x_{" + "{}".format(i) + "} & ")
-    elif is_zero(e + 1):
-        latex_file.write("-x_{" + "{}".format(i) + "} & ")
-    else:
-        latex_file.write("{}".format(e) + "x_{" + "{}".format(i) + "} & ")
-    if p:
-        latex_file.write("+ & ")
-    return True
 
 ######### IO #########
 def output_results(m):
@@ -179,7 +63,7 @@ def triangularize(m, p):
     for i in range(p):
         if remove(m, i, j):
             j += 1
-            latex_step(m)
+            latex.step(m)
         else:
             comp += [i]
     return comp
@@ -222,16 +106,22 @@ if __name__ == "__main__":
 
     print("Solving :")
     matrix.output(coeffs)
-    latex_begin(coeffs, "latex.matrix")
+    latex.begin(coeffs, "latex.matrix")
+    latex.beq()
+    latex.matrix(coeffs)
+    latex.output("\\\\")
+
     print("Triangularized :")
     comp = triangularize(coeffs, p)
     bs = base(p, comp)
     matrix.output(coeffs)
+    latex.enq()
     if not solve(coeffs, bs, p):
         print("No solution.")
-        latex_end(None)
+        latex.string("No solution.\n")
     else:
         print("Solution : ")
         output_results(bs)
-        latex_end(bs)
+        latex.base(bs)
+    latex.end("Solving a linear system")
 
