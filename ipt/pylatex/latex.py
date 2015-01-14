@@ -91,12 +91,12 @@ def step(m):
     if not latex_file:
         return
     latex_file.write("\\Leftrightarrow")
-    matrix(m)
+    system(m)
     latex_file.write("\\\\\n")
 
-def matrix(m):
+def system(m):
     """
-    Output a matrix in latex format to the latex file.
+    Output a system in latex format to the latex file.
     """
     global latex_file
     if not latex_file:
@@ -131,5 +131,22 @@ def elem(e, i, p):
     if p:
         latex_file.write("+ & ")
     return True
+
+def matrix(m):
+    """
+    Output a matrix in latex format to the latex file.
+    """
+    global latex_file
+    if not latex_file:
+        return
+    latex_file.write("\\left(\\begin{array}{")
+    latex_file.write("c" * len(m[0]))
+    latex_file.write("}")
+    for j in range(len(m)):
+        latex_file.write("{} ".format(m[j][0]))
+        for i in range(1, len(m[j])):
+            latex_file.write("& {} ".format(m[j][i]))
+        latex_file.write(" \\\\\n")
+    latex_file.write("\\end{array}\\right)")
 
 
