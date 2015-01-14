@@ -8,7 +8,7 @@ mat = [
         [ 0, 0, 1, 3 ]
       ]
 
-gauss.output_matrix(mat)
+gauss.matrix.output(mat)
 comp = gauss.triangularize(mat, 3)
 base = gauss.base(3, comp)
 if not gauss.solve(mat, base, 3):
