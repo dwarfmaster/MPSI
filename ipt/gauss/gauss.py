@@ -3,6 +3,7 @@
 ######### Imports #######
 import string
 import sys
+import matrix
 
 ######### Type definition #######
 # A matrix is an array of arrays. More precisely, it 
@@ -147,57 +148,6 @@ def output_results(m):
             print(repr(m[i][j]).rjust(6), end=" ")
         print("|")
 
-def read_matrix(path):
-    """
-    Reads a matrix from a file : returns the matrix and a boolean indicating the success
-    """
-    f = open(path, 'r')
-    m = []
-    if not f:
-        return m, False
-    x = -1
-    for line in f:
-        if len(line) == 0 or line[0] == '#':
-            continue
-        row = [float(s.strip()) for s in line.split()]
-        if x < 0:
-            x = len(row)
-        elif len(row) != x:
-            return m, False
-        m.append(row)
-    return m, True
-
-def output_matrix(m):
-    for i in range(len(m)):
-        print("| ", end="")
-        for j in range(len(m[i])):
-            print(repr(m[i][j]).rjust(6), end=" ")
-        print("|")
-
-######### Matrix manipulation ########
-def matrix_swap(m, i1, i2):
-    """
-    Swaps the contents of the i1 and i2 lines
-    """
-    if len(m) == 0 or len(m) <= max(i1, i2):
-        return
-    for i in range(len(m[0])):
-        m[i1][i], m[i2][i] = m[i2][i], m[i1][i]
-
-def matrix_add(m, l1, n, l2):
-    """
-    Add n times the contents of the l2 line to the l1 one
-    """
-    for i in range(len(m[0])):
-        m[l1][i] += n*m[l2][i]
-
-def matrix_mult(m, l, n):
-    """
-    Multiply each element of the l line by n
-    """
-    for i in range(len(m[l])):
-        m[l][i] *= n
-
 ######### Gauss transformation ########
 def remove(m, x, y):
     """
@@ -211,9 +161,9 @@ def remove(m, x, y):
         if not piv:
             piv = m[j][x]
             if j != y:
-                matrix_swap(m, j, y)
+                matrix.swap(m, j, y)
             continue
-        matrix_add(m, j, -m[j][x]/piv, y)
+        matrix.add(m, j, -m[j][x]/piv, y)
     if piv:
         return True
     else:
@@ -258,25 +208,25 @@ def solve(m, bs, p):
             return False
         bs[z][0] = m[i][p]
         for j in range(z+1, p):
-            matrix_add(bs, z, -m[i][j], j)
-        matrix_mult(bs, z, 1.0/m[i][z])
+            matrix.add(bs, z, -m[i][j], j)
+        matrix.mult(bs, z, 1.0/m[i][z])
     return True
 
 ######### Main loop ##########
 if __name__ == "__main__":
-    coeffs, b = read_matrix(sys.argv[1])
+    coeffs, b = matrix.read(sys.argv[1])
     if not b:
         print("Invalid file :", sys.argv[1])
         exit()
     p = len(coeffs[0]) - 1
 
     print("Solving :")
-    output_matrix(coeffs)
+    matrix.output(coeffs)
     latex_begin(coeffs, "latex.matrix")
     print("Triangularized :")
     comp = triangularize(coeffs, p)
     bs = base(p, comp)
-    output_matrix(coeffs)
+    matrix.output(coeffs)
     if not solve(coeffs, bs, p):
         print("No solution.")
         latex_end(None)
