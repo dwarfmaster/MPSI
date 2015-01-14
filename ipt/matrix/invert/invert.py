@@ -5,6 +5,20 @@ import matrix;
 import latex;
 from misc import *;
 
+def latex_line(mat):
+    p1, p2 = [], []
+    size = len(mat)
+    for i in range(len(mat)):
+        p1 += [[0] * size]
+        p2 += [[0] * size]
+        for j in range(size):
+            p1[i][j] = mat[i][j]
+            p2[i][j] = mat[i][j + size]
+    latex.matrix(p1)
+    latex.output(" & ")
+    latex.matrix(p2)
+    latex.output(" \\\\")
+
 if __name__ == "__main__":
     # Reading the matrix
     if len(sys.argv) != 2:
@@ -23,8 +37,7 @@ if __name__ == "__main__":
     # LaTeX output
     latex.begin("latex.matrix")
     latex.beq()
-    latex.matrix(mat)
-    latex.output("\\\\")
+    latex.output("\\begin{array}{cc}\n")
 
     # Adding identity
     size = len(mat)
@@ -32,13 +45,15 @@ if __name__ == "__main__":
         add = [0] * len(mat)
         add[i] = 1
         mat[i] += add
+    latex_line(mat)
 
     # Eliminating
     for i in range(len(mat)):
         if is_zero(mat[i][i]):
             print("Can't invert the matrix.")
+            latex.output("\\end{array}")
             latex.enq()
-            latex.output("Can't invert the matrix.\n")
+            latex.output("\\\\Can't invert the matrix.\n")
             latex.end("Inverting the matrix")
             exit()
         matrix.mult(mat, i, 1/mat[i][i])
@@ -46,8 +61,7 @@ if __name__ == "__main__":
             if j == i:
                 continue
             matrix.add(mat, j, -mat[j][i], i)
-        latex.output("\\\\\\Rightarrow")
-        latex.matrix(mat)
+        latex_line(mat)
 
     # Output
     invert = []
@@ -58,6 +72,7 @@ if __name__ == "__main__":
     matrix.output(invert)
 
     # LaTeX output
+    latex.output("\\end{array}")
     latex.enq()
     latex.output("\\\\Inverse :\n")
     latex.beq()
