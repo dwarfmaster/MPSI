@@ -2,34 +2,30 @@
 
 import random as rd;
 
-# The tree
-# tree = [
-#         [3],
-#         [1, 2],
-#         [4, 5, 6],
-#         [10, 8, 9, 7]
-#        ]
-
-# Create a random tree of depth n and print it
+# Create a random tree of depth n
 def randtree(n):
     tr = [None] * n
-    print("Tree :")
     for i in range(n):
         tr[i] = [None] * (i+1)
         for j in range(i+1):
             tr[i][j] = rd.randint(0,500)
-        print(tr[i])
     return tr
 
 # Fill tree_l and tree_p to level n, considering n-1 is filled
 def fill(tree, tree_l, tree_n, n):
+    mi = 0
+    mv = 0
     for i in range(len(tree[n])):
         if i == 0:
             tree_l[n][0] = tree_l[n-1][0] + tree[n][0]
             tree_p[n][0] = tree_p[n-1][0] + [0]
+            mv = tree_l[n][0]
         elif i == n:
             tree_l[n][-1] = tree_l[n-1][-1] + tree[n][-1]
             tree_p[n][-1] = tree_p[n-1][-1] + [1]
+            if tree_l[n][-1] > mv:
+                mi = len(tree_l[n]) - 1
+                mv = tree_l[n][-1]
         else:
             ll = tree_l[n-1][i-1]
             lr = tree_l[n-1][i]
@@ -39,6 +35,10 @@ def fill(tree, tree_l, tree_n, n):
             else:
                 tree_l[n][i] = lr + tree[n][i]
                 tree_p[n][i] = tree_p[n-1][i] + [0]
+            if tree_l[n][i] > mv:
+                mv = tree_l[n][i]
+                mi = i
+    return mi
 
 # Create the intermediary lists
 def create(tree, tree_l, tree_p):
@@ -71,19 +71,20 @@ def ppath(p):
 
 # Algorithm
 if __name__ == "__main__":
-    l = rd.randint(10, 20)
+    l = rd.randint(500, 1000)
     print("Length :", l)
     tree = randtree(l)
+    print("Tree generated !")
     tree_l = [None]*len(tree)
     tree_p = [None]*len(tree)
     create(tree, tree_l, tree_p)
     tree_l[0][0] = tree[0][0]
     tree_p[0][0] = []
+    mid = 0
     for i in range(1,len(tree)):
-        fill(tree, tree_l, tree_p, i)
-    mid = maxl(tree_l[-1])
+        mid = fill(tree, tree_l, tree_p, i)
     print("Max length", tree_l[-1][mid])
-    print("Path :", tree_p[-1][mid])
+    # print("Path :", tree_p[-1][mid])
     ppath(tree_p[-1][mid])
 
 
