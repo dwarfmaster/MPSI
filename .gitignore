@@ -16,6 +16,10 @@ cabal-dev
 cabal.sandbox.config
 cabal.config
 
+# Caml files
+*.zi
+*.zo
+
 # LaTeX files
 *.acn
 *.acr
