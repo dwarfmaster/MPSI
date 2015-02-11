@@ -109,27 +109,22 @@ pgcd 21 9;;
 
 (* Exercice 9 *)
 (* TODO proof *)
-(* TODO handle special cases *)
 let drapeau_hollandais a =
-    let m1 = ref 0 and m2 = ref (vect_length a - 1) in
-    while a.(!m1) = -1 do
-        m1 := !m1 + 1;
-    done;
-    while a.(!m2) = 1 do
-        m2 := !m2 - 1;
-    done;
-    let i = ref !m1 in
-    while !i < !m2 do
+    let n = vect_length a in
+    let m1 = ref 0 and m2 = ref (n - 1) in
+    let i = ref 0 in
+    while !i <= !m2 do
         if a.(!i) = -1 then begin
-            echange a !i !m1;
+            echange a !m1 !i;
             m1 := !m1 + 1;
-        end
+            i := !i + 1;
+            end
         else if a.(!i) = 1 then begin
-            echange a !i !m2;
-            print_int !i;
+            echange a !m2 !i;
             m2 := !m2 - 1;
-        end;
-        i := !i + 1;
+            end
+        else
+            i := !i + 1;
     done;;
 let holl = [|-1; 0; -1; 1; 0; 1; 1; 0; 0; -1; -1; 0; 1; 0; -1|];;
 drapeau_hollandais holl;;
