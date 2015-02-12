@@ -1,0 +1,74 @@
+\section{Le drapeau hollandais}
+\subsection{Objectif}
+Le but de cet exercice est de trier en une seule passe un tableau contenant
+seulement trois valeurs. Dans notre cas, ces trois valeurs seront $-1$, $0$ et
+$1$, qui devront être classée dans cet ordre.
+
+\subsection{Algorithme}
+L'algorithme utilisé est le suivant : \newline
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{a = tableau de valeurs}
+    \KwData{m1 = 0}
+    \KwData{m2 = taille de a moins 1}
+    \KwData{i = 0}
+    \While{i $\leq$ m2}{
+        \eIf{a[i] = $-1$}{
+            Échanger a[m1] et a[i]\;
+            m1 = m1 + 1\;
+            i = i + 1\;
+        }{
+            \eIf{a[i] = $1$} {
+                Échanger a[m2] et a[i]\;
+                m2 = m2 - 1\;
+            }{
+                i = i + 1\;
+            }
+        }
+    }
+\end{algorithm}
+
+\subsection{Preuve}
+Afin de prouver cet algorithme, nous devons trouver un invariant de boucle. Cet
+invariant est l'état du tableau. En effet, nous allons considérer que le
+tableau est toujours dans l'état suivant :
+
+\begin{center}
+    % TODO improve appearance
+    \begin{tabular}{|ccc|ccc|ccc|ccc|}
+        \hline
+        ... & $-1$ & ... & ... & $0$ & ... & ... & $X$ & ... & .... & $1$ & ...\\
+        \hline
+            &&& m1 &&& i &&& m2 && \\
+    \end{tabular}
+\end{center}
+
+Avec $X$ la zone des valeurs non encore triées.
+
+\paragraph{Initialisation} À l'état initial, le tableau est considéré comme
+étant intégralement dans l'état $X$. Les trois autres zones sont de taille
+nulles (en effet, $m1$ et $i$ valent $0$ tandis que $m2$ est à la fin du
+tableau).
+
+\paragraph{Hérédité} On considère l'élément d'indice $i$. On traite trois cas :
+\begin{itemize}
+    \item $a[i] = 0$ Dans ce cas, la case d'indice $i$ fait déjà partie de la
+        zone $0$, il suffit d'incrémenter $i$.
+    \item $a[i] = -1$ Dans ce cas, il faut placer le contenu de la case dans la
+        zone $-1$. Pour ce faire, on échange son contenu avec celui de la case
+        d'indice $m1$ (fin de la zone de $-1$), puis on incrémente $-1$ pour
+        indiquer que la taille de la zone a augmentée. La case d'indice $i$
+        contient maintenant $0$ si la zone de zéro était non vide, $-1$ sinon.
+        Dans les deux cas, le tableau est toujours dans le bon état : on peut
+        incrémenter $i$.
+    \item $a[i] = 1$ dans ce cas, on échange le contenu de la case avec celui
+        de la case d'indice $m2$ puis on décrémente $m2$ afin d'indiquer que la
+        taille de la zone de $1$ vient d'augmenter.
+\end{itemize}
+Dans chacun de ces trois cas, le tableau conserve son état, tandis que la
+taille de la zone $X$ diminue.
+
+\paragraph{Fin} L'algorithme se termine quand la taille de la zone $X$ est
+nulle. À ce moment, le tableau est toujours dans l'état d'après l'hérédité, il
+est donc trié.
+

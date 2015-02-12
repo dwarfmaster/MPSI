@@ -56,4 +56,5 @@ cabal.config
 *.pdf
 pkgs/
 docs/
+build/
 
