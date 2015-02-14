@@ -54,6 +54,7 @@ cabal.config
 *.xdy
 *.tdo
 *.pdf
+*.eps
 pkgs/
 docs/
 build/
