@@ -60,19 +60,21 @@ polyCyclo cfs = compXp cf $ subPolyCyclo $ fmap first cfs
 nsqrt :: Int -> Int
 nsqrt n = truncate $ sqrt $ fromRational $ toRational n
 
-merge :: [(Int,Int)] -> [(Int,Int)] -> [(Int,Int)]
-merge a []         = a
-merge a ((p,e):ls) = merge a2 ls
-    where a2 = if find p a then fmap apply a else (p,e):a
-            where find _ []     = False
-                  find f ((l,_):ls) = if f == l then True else find f ls
-                  apply (p2,e2) = if p2 == p then (p2, e+e2) else (p2,e2)
+sortFus :: [a] -> (a -> a -> Ordering) -> (a -> a -> a) -> [a]
+sortFus []     _ _ = []
+sortFus (l:ls) c f = sortFus l1 c f ++ [foldl f l m] ++ sortFus l2 c f
+    where l1 = [x | x <- ls, x `c` l == LT]
+          m  = [x | x <- ls, x `c` l == EQ]
+          l2 = [x | x <- ls, x `c` l == GT]
 
 decomp :: Int -> [(Int,Int)]
-decomp 1 = []
-decomp n = if length dvs == 0 then [(n,1)] 
-           else let (d,d2) = ((dvs!!0), n `div` d) in merge (decomp d) (decomp d2)
-    where dvs = [d | d <- [2..nsqrt n], n `mod` d == 0]
+decomp n = sortFus (subDecomp n) cmp fus
+    where subDecomp 1 = []
+          subDecomp n = if length dvs == 0 then [(n,1)]
+                        else let (d,d2) = ((dvs!!0), n `div` d) in decomp d ++ decomp d2
+              where dvs = [d | d <- [2..nsqrt n], n `mod` d == 0]
+          cmp (a1,_) (a2,_)   = a1 `compare` a2
+          fus (a1,b1) (a2,b2) = (a1, b1+b2)
 
 polyCyclo2 :: Int -> Poly
 polyCyclo2 n = polyCyclo $ decomp n
