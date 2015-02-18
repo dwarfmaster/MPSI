@@ -100,7 +100,7 @@ def quicksort(l):
 if __name__ == "__main__":
     coeffs = []
     test = True
-    for n in range(2,100):
+    for n in range(2,400):
         cfs = polyCyclo2(n)
         if test:
             for a in cfs:

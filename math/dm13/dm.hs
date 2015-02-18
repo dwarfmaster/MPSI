@@ -39,7 +39,7 @@ divEuclid a b = mdiv [] a b
                     hd (a:as) = if length as == 0 then [] else a:hd as
 
 compXp :: Int -> Poly -> Poly
-compXp n p = norm $ (p!!0):[value i | i <- [1..(n*deg p - 1)]]
+compXp n p = norm $ head p:[value i | i <- [1..(n*deg p - 1)]]
     where value i = if i `mod` n == 0 then (p!!(div i n)) else 0
 
 first :: (a, b) -> a
@@ -60,18 +60,18 @@ polyCyclo cfs = compXp cf $ subPolyCyclo $ fmap first cfs
 nsqrt :: Int -> Int
 nsqrt n = truncate $ sqrt $ fromRational $ toRational n
 
-sortFus :: [a] -> (a -> a -> Ordering) -> (a -> a -> a) -> [a]
-sortFus []     _ _ = []
-sortFus (l:ls) c f = sortFus l1 c f ++ [foldl f l m] ++ sortFus l2 c f
+sortFus :: (a -> a -> Ordering) -> (a -> a -> a) -> [a] -> [a]
+sortFus _ _ []     = []
+sortFus c f (l:ls) = sortFus c f l1 ++ [foldl f l m] ++ sortFus c f l2
     where l1 = [x | x <- ls, x `c` l == LT]
           m  = [x | x <- ls, x `c` l == EQ]
           l2 = [x | x <- ls, x `c` l == GT]
 
 decomp :: Int -> [(Int,Int)]
-decomp n = sortFus (subDecomp n) cmp fus
+decomp n = sortFus cmp fus $ subDecomp n
     where subDecomp 1 = []
           subDecomp n = if length dvs == 0 then [(n,1)]
-                        else let (d,d2) = ((dvs!!0), n `div` d) in decomp d ++ decomp d2
+                        else let (d,d2) = (head dvs, n `div` d) in decomp d ++ decomp d2
               where dvs = [d | d <- [2..nsqrt n], n `mod` d == 0]
           cmp (a1,_) (a2,_)   = a1 `compare` a2
           fus (a1,b1) (a2,b2) = (a1, b1+b2)
@@ -80,5 +80,9 @@ polyCyclo2 :: Int -> Poly
 polyCyclo2 n = polyCyclo $ decomp n
 
 main :: IO()
-main = putStrLn $ show $ polyCyclo2 60
+main = putStrLn $ show $ sortFus compare mid $ fuse $ fmap polyCyclo2 [1..400]
+    where fuse :: [[a]] -> [a]
+          fuse []     = []
+          fuse (e:es) = e ++ fuse es
+          mid a b = a
 
