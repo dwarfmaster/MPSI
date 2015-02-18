@@ -45,14 +45,16 @@ def compXp(a, p):
     return l
 
 def polyCyclo(l):
-    if len(l) == 0:
-        return [-1, 1]
-    p = l[0][0]
-    ls = l[1:]
+    def subPolyCyclo(l):
+        if len(l) == 0:
+            return [-1, 1]
+        ls = l[1:]
+        poly = subPolyCyclo(ls)
+        return divEuclid(compXp(poly, l[0][0]), poly)[0]
+    p = 1
     for i in range(len(l)):
         p *= l[i][0] ** (l[i][1] - 1)
-    poly = polyCyclo(ls)
-    return divEuclid(compXp(poly, p), poly)[0]
+    return compXp(subPolyCyclo(l), p)
 
 def decomp(n):
     if n == 1:

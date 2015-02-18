@@ -50,10 +50,12 @@ pow _ 0 = 1
 pow x n = x * pow x (n-1)
 
 polyCyclo :: [(Int,Int)] -> Poly
-polyCyclo []          = [-1, 1]
-polyCyclo ((p,a):cfs) = first $ divEuclid (compXp cf pl) pl
-    where cf = p * foldl (*) 1 [pow pl (al - 1) | (pl,al) <- (p,a):cfs]
-          pl = polyCyclo cfs
+polyCyclo cfs = compXp cf $ subPolyCyclo $ fmap first cfs
+    where cf = foldl (*) 1 [pow pl (al - 1) | (pl,al) <- cfs]
+          subPolyCyclo :: [Int] -> Poly
+          subPolyCyclo []     = [-1, 1]
+          subPolyCyclo (p:ps) = first $ divEuclid (compXp p pl) pl
+              where pl = subPolyCyclo ps
 
 nsqrt :: Int -> Int
 nsqrt n = truncate $ sqrt $ fromRational $ toRational n
