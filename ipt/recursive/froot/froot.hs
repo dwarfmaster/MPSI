@@ -65,12 +65,12 @@ epsilons = map (\x -> pow 10 (-x)) [0..]
 prec = 10
 p = 2 :: Int
 x = 2 :: Double
-maxN = 1000
+maxN = 1000 :: Int
 
 main = do putStrLn $ (++) "Precision : "   $ show $ epsilons !! prec
-          putStrLn $ (++) "With secant : " $ show $ scs !! prec
-          putStrLn $ (++) "With dicho : "  $ show $ rts !! prec
-          putStrLn $ (++) "With newton : " $ show $ nts !! prec
+          putStrLn $ (++) "With secant : " $ show $ scs      !! prec
+          putStrLn $ (++) "With dicho : "  $ show $ rts      !! prec
+          putStrLn $ (++) "With newton : " $ show $ nts      !! prec
     where fn = (f p x)
           df = delta fn
           scs = map (secant_cn fn 0  x 0) epsilons
