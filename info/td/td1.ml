@@ -108,7 +108,6 @@ let rec pgcd a b =
 pgcd 21 9;;
 
 (* Exercice 9 *)
-(* TODO proof *)
 let drapeau_hollandais a =
     let n = vect_length a in
     let m1 = ref 0 and m2 = ref (n - 1) in
