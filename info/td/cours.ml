@@ -40,3 +40,31 @@ let rec fibo_couple n = match n with
 let fibo2 n = fst (fibo_couple n);;
 fibo2 20;;
 
+let rec fibo_term (u,v) n = match n with
+    | 0 -> u
+    | _ -> fibo_term (v, u+v) (n-1);;
+let fibo3 n = fibo_term (0,1) n;;
+fibo3 20;;
+
+let fibo_imp n =
+    let u = ref 0 and v = ref 1 in
+    for i = n downto 1 do
+        let tmp = !u in u := !v; v := tmp + !u;
+    done;
+    !u;;
+fibo_imp 20;;
+
+let maximum2 (l:int list) =
+    let rec max_aux acc l = match l with
+        | [] -> failwith "Liste vide"
+        | a::[] -> max a acc
+        | a::q  -> max_aux (max a acc) q
+    in max_aux (hd l) l;; (* << Erreur dans le cours, oublie du l *)
+maximum2 [2; 5; 6; 7; 3; 2; 6];;
+
+let rec maximum3 (l:int list) = match l with
+    | [] -> failwith "List vide"
+    | a::[] -> a
+    | a::b::q -> maximum3 ((max a b) :: q);;
+maximum3 [2; 5; 6; 7; 3; 2; 6];;
+
