@@ -24,3 +24,28 @@ approxp p x e
               where nx = x * fromIntegral p
                     (i,d) = properFraction nx
 
+rd :: Char -> Int
+rd '0' = 0
+rd '1' = 1
+
+parse :: String -> (String,Bool)
+parse ('q':'u':'i':'t':[]) = ("Quitting ...", False)
+parse ('b':'i':'n':' ':l)  = (topbase 2 $ read l, True)
+parse ('a':'p':'p':' ':l)  = (approxp 2 (read l) (1e-10), True)
+parse ('d':'e':'c':' ':l)  = (show $ horner (map rd l) 2, True)
+parse _                    = ("Invalid command.", True)
+
+while :: IO Bool -> IO ()
+while f = do b <- f
+             if b then while f
+             else return ()
+
+mainloop :: IO Bool
+mainloop = do putStr ">>> "
+              l <- getLine
+              let (s,b) = parse l
+              putStrLn s
+              return b
+
+main = while mainloop
+
