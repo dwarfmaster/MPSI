@@ -110,7 +110,51 @@ let rec pgcdn a b n = match b with
     | _ -> pgcdn b (a mod b) (n + 1);;
 pgcdn 12 27 0;;
 
-let rec bezout a b = match b with
-    | 0 -> (1,0)
-    | _ -> 5;;
+let bezout a b =
+    let rec mbezout (a,b) (x1,y1) (x2,y2) = match b with
+        | 0 -> (x1,y1)
+        | _ -> let (q,r) = (a/b,a mod b) in mbezout (b,r) (x2,y2) (x1-q*x2, y1-q*y2)
+    in mbezout (a,b) (1,0) (0,1);;
+bezout 144 13;;
+
+(* Exercice 11 *)
+let pi = 4. *. atan(1);;
+let eps = 0.01;;
+let rec mcos x = if x < 0. then mcos (x +. 2.*.pi)
+    else if x > 2.*.pi then mcos (x -. 2.*.pi)
+    else if x > pi     then -1. *. mcos (x -. pi)
+    else if x > pi/.2. then let y = msin (x /. 2.) in 1. -. 2. *. y *. y
+    else if x > pi/.4. then msin (pi/.2. -. x)
+    else if x > eps    then let y = msin (x /. 2.) in 1. -. 2. *. y *. y
+    else 1. -. x*.x/.2.
+and msin x = if x < 0. then msin (x +. 2.*.pi)
+    else if x > 2.*.pi then msin (x -. 2.*.pi)
+    else if x > pi     then -1. *. msin (x -. pi)
+    else if x > pi/.2. then 2. *. (msin x) *. (mcos x)
+    else if x > pi/.4. then mcos (pi/.2. -. x)
+    else if x > eps    then 2. *. (msin (x/.2.)) *. (mcos (x/.2.))
+    else x;;
+msin 0.1;;
+mcos 0.1;;
+mcos (pi /. 2.);;
+
+(* Exercice 12 *)
+let rec hanoi a b c n = 
+    let str_ft a b = "Déplacer un disque de " ^ (string_of_char a) ^ " vers " ^ (string_of_char b) ^ "\n" in match n with
+    | 1 -> print_string (str_ft a b)
+    | _ -> begin hanoi a c b (n-1);
+                 print_string (str_ft a b);
+                 hanoi c b a (n-1);
+    end;;
+hanoi `A` `B` `C` 3;;
+
+(* Exercice 13 *)
+let rec josephe n = let r = n mod 2 in match (n,r) with
+    | (1,_) -> 1
+    | (_,0) -> (2 * (josephe (n/2))) - 1
+    | (_,1) -> (2 * (josephe (n/2))) + 1
+    | _     -> failwith "Invalid arguments";;
+josephe 6;;
+josephe 3;;
+
 
