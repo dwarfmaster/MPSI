@@ -1,0 +1,109 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage[top=2cm,left=2cm,right=3cm,left=3cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{Intégration numérique}
+\author{Luc Chabassier}
+
+\begin{document}
+\maketitle
+
+Il s'agit de calculer numériquement des intégrales.
+
+\section{Décompostion en quadratures élémentaires}
+On a \[\int_a^b f(x)dx = \sum_{i=0}^{n-1} \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx \]
+
+\section{Quadrature élémentaire}
+\subsection{Ordre d'une méthode}
+Une méthode de quadrature est d'ordre $N$ si la formule approchée est exacte pour tout polynôme de degré $N$ et inexacte pour au moins un polynôme de degré $N+1$.
+
+\subsection{Méthode des rectangles}
+\subsubsection{Cas général}
+On approxime la fonction $f$ par la fonction constante de valeur : $y = f(\xi_i), \xi_i \in [\alpha_i, \alpha_{i+1}]$.
+
+On a : \begin{equation}
+    \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx \approx (\alpha_{i+1} - \alpha_i)f(\xi_i)
+    \label{rect}
+\end{equation}
+
+\subsubsection{Méthode des rectangles à gauche}
+On prend $\xi_i = \alpha_i$
+
+Si $f$ est croissante, on obtient une minoration de l'intégrale.
+
+Si $f$ est décroissante, on obtient une majoration de l'intégrale.
+
+\subsubsection{Méthode des rectangle à droite}
+On prend $\xi_i = \alpha_{i+1}$
+
+Si $f$ est croissante, on obtient une majoration de l'intégrale.
+
+Si $f$ est déccroissante, on obtient une minoration de l'intégrale.
+
+\subsubsection{Méthode du point millieu}
+On prend $\xi_i = \frac{\alpha_{i+1} - \alpha_i}{2}$
+
+On n'obtient ni majoration ni minoration, mais la méthode est plus précise.
+
+\subsubsection{Étude de la précision}
+Les méthodes des rectangles à droite à gauche et à gauche sont des méthodes d'ordre zéro. Si on prend $f(x) = C, C\in\mathbb{R}$. On a :
+%TODO
+\[ \int_a^b f(x)dx = \begin{array}{l}
+            (b-a) * C \\
+            \sum_{i=0}^{n-1}\int_{\alpha_i}^{\alpha_{i+1}} f(\alpha_i)dx = C\sum_{i=0}^{n-1}(\alpha_{i+1} - \alpha_i) = (b-a) * C
+        \end{array}
+\]
+
+Le calcul fonctionne bien. Cependant, si on prend $f(x) = mx+p, (m,p)\in\mathbb{R}^2$, on a:
+\[ \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx = \begin{array}{l}
+        \int_{\alpha_i}^{\alpha_{i+1}} f(\alpha_i)dx = \int_{\alpha_i}^{\alpha_{i+1}} (mx+p)dx = \left[\frac{1}{2}mx^2+px\right]_{\alpha_i}^{\alpha_{i+1}} = \frac{1}{2}m(\alpha_{i+1}^2 - \alpha_i^2) + p(\alpha_{i+1} - \alpha_i) \\
+        \int_{alpha_i}^{\alpha_{i+1}} (m\alpha_i+p)dx = (m\alpha_i+p) * (\alpha_{i+1} - \alpha_i)
+    \end{array}
+\]
+
+Les méthodes des rectangles à droite et à gauche sont donc d'ordre zéro. La méthode des rectangles au point milieu est elle d'ordre 1 : elle est plus précise.
+%TODO proof
+
+\subsection{Méthode des trapèzes}
+On calcule l'aire du trapèze formé par les points $f(\alpha_i)$ et $f(\alpha_{i+1})$.
+
+On utilise l'interpolation de Lagrange pour créer le polynôme de degré 1 passant par les deux point voulus : \begin{equation}
+    p(x) = f(\alpha_i)\frac{x - \alpha_{i+1}}{\alpha_i-\alpha_{i+1}} + f(\alpha_{i+1})\frac{x - \alpha_i}{\alpha_{i+1} - \alpha_i}
+\end{equation}
+
+L'approximation par la méthode des trapèzes donne : \begin{equation}
+    \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx \approx \int_{\alpha_i}^{\alpha_{i+1}} p(x)dx = I_T
+\end{equation}
+
+On calcule : \[ \begin{array}{rcl}
+        I_T & = & f(\alpha_i)\int_{alpha_i}^{\alpha_{i+1}}\frac{x - \alpha_{i+1}}{\alpha_i-\alpha_{i+1}}dx + f(\alpha_{i+1})\int_{alpha_i}^{\alpha_{i+1}}\frac{x - \alpha_i}{\alpha_{i+1} - \alpha_i}dx \\
+            & = & \frac{f(\alpha_i)}{\alpha_i - \alpha_{i+1}}\left[\frac{1}{2}(x - \alpha_{i+1})^2\right]_{\alpha_i}^{\alpha_{i+1}} + \frac{f(\alpha_{i+1})}{\alpha_{i+1} - \alpha_i}\left[\frac{1}{2}(x-\alpha_i)^2\right]_{\alpha_i}^{\alpha_{i+1}} \\
+            & = & (\alpha_{i+1} - \alpha_i)\frac{f(\alpha_i) + f(\alpha_{i+1}}{2}
+    \end{array}
+\]
+
+C'est une méthode d'ordre 1, mais qui donne un résultat différent que celle des rectangles au point milieu.
+
+\subsection{Méthode de Simpson}
+On approche la fonction sur $[\alpha_i, \alpha_{i+1}]$ par un polynôme de degré 2, en considérent les deux points aux extrémités et le point milieu. On nomme ce polynôme $p_2(x)$.
+
+On pose : \[ I_S = \int_{\alpha_i}^{\alpha_{i+1}} p_2(x)dx \]
+
+Afin de simplifier les calculs, on pose $u(x) = Ax+B$, et on effectue le changement de variable $f(x) = g \circ u(x)$. On veut $u(\alpha_i) = -1$ et $u(\alpha_{i+1}) = 1$. On trouve donc $A = \frac{2}{\alpha_{i+1} - \alpha_i}$ et $B = -\frac{\alpha_i + \alpha_{i+1}}{\alpha_{i+1} - \alpha_i}$
+
+Calculons : \[ \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx = \int_{\alpha_i}^{\alpha_{i+1}} g(u(x))dx = \frac{1}{A}\int_{-1}^1 g(u)du = \frac{\alpha_{i+1} - \alpha_{i}}{2} \int_{-1}^{1} g(u)du \]
+
+% TODO remplacer p_2' par \~{p_2}
+On cherche maintenant à exprimer $p_2'$ tel que $p_2 = p_2' \circ u$. On a :
+\[ p_2'(u) = \frac{1}{2}f(\alpha_i)u(u-1) + f\left(\frac{\alpha_i + \alpha_{i+1}}{2}\right)(u+1)(1-u) + \frac{1}{2}f(\alpha_{i+1})u(u+1) \]
+
+On peut donc calculer :
+% TODO
+\[ \int_{-1}^1 p_2'(u)du = \]
+
+\end{document}
