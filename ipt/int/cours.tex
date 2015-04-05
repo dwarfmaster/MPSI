@@ -6,6 +6,10 @@
 \usepackage[top=2cm,left=2cm,right=3cm,left=3cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+
+\newcommand{\tld}[1]{\widetilde{#1}}
 
 \title{Intégration numérique}
 \author{Luc Chabassier}
@@ -28,7 +32,6 @@ On approxime la fonction $f$ par la fonction constante de valeur : $y = f(\xi_i)
 
 On a : \begin{equation}
     \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx \approx (\alpha_{i+1} - \alpha_i)f(\xi_i)
-    \label{rect}
 \end{equation}
 
 \subsubsection{Méthode des rectangles à gauche}
@@ -50,44 +53,54 @@ On prend $\xi_i = \frac{\alpha_{i+1} - \alpha_i}{2}$
 
 On n'obtient ni majoration ni minoration, mais la méthode est plus précise.
 
-\subsubsection{Étude de la précision}
-Les méthodes des rectangles à droite à gauche et à gauche sont des méthodes d'ordre zéro. Si on prend $f(x) = C, C\in\mathbb{R}$. On a :
-%TODO
-\[ \int_a^b f(x)dx = \begin{array}{l}
-            (b-a) * C \\
-            \sum_{i=0}^{n-1}\int_{\alpha_i}^{\alpha_{i+1}} f(\alpha_i)dx = C\sum_{i=0}^{n-1}(\alpha_{i+1} - \alpha_i) = (b-a) * C
-        \end{array}
+\subsubsection{Étude de l'ordre}
+Les méthodes des rectangles à droite à gauche et à gauche sont des méthodes d'ordre zéro. Si on prend $f(x) = C, C\in\mathbb{R}$. On a, quel que soit le $\xi_i$ choisit :
+\[
+    \left\{\begin{aligned} &\int_a^b f(c)dx = (b-a)*C \\
+                           &\sum_{i=0}^{n-1} \int_{\alpha_i}^{\alpha_{i+1}} f(\xi_i)dx = (b-a)*C
+    \end{aligned}\right.
 \]
 
-Le calcul fonctionne bien. Cependant, si on prend $f(x) = mx+p, (m,p)\in\mathbb{R}^2$, on a:
-\[ \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx = \begin{array}{l}
-        \int_{\alpha_i}^{\alpha_{i+1}} f(\alpha_i)dx = \int_{\alpha_i}^{\alpha_{i+1}} (mx+p)dx = \left[\frac{1}{2}mx^2+px\right]_{\alpha_i}^{\alpha_{i+1}} = \frac{1}{2}m(\alpha_{i+1}^2 - \alpha_i^2) + p(\alpha_{i+1} - \alpha_i) \\
-        \int_{alpha_i}^{\alpha_{i+1}} (m\alpha_i+p)dx = (m\alpha_i+p) * (\alpha_{i+1} - \alpha_i)
-    \end{array}
+Le calcul fonctionne bien. Cependant, si on prend $f(x) = mx+p, (m,p)\in\mathbb{R}^2$, la méthode des rectangles à droite donne :
+\[
+    \left\{\begin{aligned}
+            & \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx = \left[\frac{1}{2}mx^2+px\right]_{\alpha_i}^{\alpha_{i+1}} = \frac{1}{2}m(\alpha_{i+1}^2 - \alpha_i^2) + p(\alpha_{a+1} - \alpha_i) \\
+            & \int_{\alpha_i}^{\alpha_{i+1}} f(\alpha_i)dx = (m\alpha_i + p) * (\alpha_{i+1} - \alpha_i)
+    \end{aligned}\right.
 \]
 
-Les méthodes des rectangles à droite et à gauche sont donc d'ordre zéro. La méthode des rectangles au point milieu est elle d'ordre 1 : elle est plus précise.
-%TODO proof
+La méthode des rectangles à droite est donc d'ordre zéro. On retrouve ce résultat pour la méthode des rectangles à gauche par un calcul similaire. Intéressons nous maintenant à la méthode du point milieu. Calculons :
+\[
+    \begin{aligned} \int_{\alpha_i}^{\alpha_{i+1}} f\left(\frac{\alpha_i + \alpha_{i+1}}{2}\right) & = \left(m\frac{\alpha_i + \alpha_{i+1}}{2} + p\right) * (\alpha_{i+1} - \alpha_i) \\
+                                                                                                   & = \frac{1}{2}m(\alpha_{i+1}^2 - \alpha_i^2) + p(\alpha_{i+1} - \alpha_i)
+    \end{aligned}
+\]
+
+La méthode du point milieu est donc au moins d'ordre un. Des calculs avec des polynômes d'ordre deux permettraient de montrer que cette méthode est d'ordre exactement deux.
 
 \subsection{Méthode des trapèzes}
 On calcule l'aire du trapèze formé par les points $f(\alpha_i)$ et $f(\alpha_{i+1})$.
 
-On utilise l'interpolation de Lagrange pour créer le polynôme de degré 1 passant par les deux point voulus : \begin{equation}
-    p(x) = f(\alpha_i)\frac{x - \alpha_{i+1}}{\alpha_i-\alpha_{i+1}} + f(\alpha_{i+1})\frac{x - \alpha_i}{\alpha_{i+1} - \alpha_i}
-\end{equation}
-
-L'approximation par la méthode des trapèzes donne : \begin{equation}
-    \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx \approx \int_{\alpha_i}^{\alpha_{i+1}} p(x)dx = I_T
-\end{equation}
-
-On calcule : \[ \begin{array}{rcl}
-        I_T & = & f(\alpha_i)\int_{alpha_i}^{\alpha_{i+1}}\frac{x - \alpha_{i+1}}{\alpha_i-\alpha_{i+1}}dx + f(\alpha_{i+1})\int_{alpha_i}^{\alpha_{i+1}}\frac{x - \alpha_i}{\alpha_{i+1} - \alpha_i}dx \\
-            & = & \frac{f(\alpha_i)}{\alpha_i - \alpha_{i+1}}\left[\frac{1}{2}(x - \alpha_{i+1})^2\right]_{\alpha_i}^{\alpha_{i+1}} + \frac{f(\alpha_{i+1})}{\alpha_{i+1} - \alpha_i}\left[\frac{1}{2}(x-\alpha_i)^2\right]_{\alpha_i}^{\alpha_{i+1}} \\
-            & = & (\alpha_{i+1} - \alpha_i)\frac{f(\alpha_i) + f(\alpha_{i+1}}{2}
-    \end{array}
+On utilise l'interpolation de Lagrange pour créer le polynôme de degré 1 passant par les deux point voulus : \[
+    p_1(x) = f(\alpha_i)\frac{x - \alpha_{i+1}}{\alpha_i-\alpha_{i+1}} + f(\alpha_{i+1})\frac{x - \alpha_i}{\alpha_{i+1} - \alpha_i}
 \]
 
-C'est une méthode d'ordre 1, mais qui donne un résultat différent que celle des rectangles au point milieu.
+L'approximation par la méthode des trapèzes donne : \[
+    \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx \approx \int_{\alpha_i}^{\alpha_{i+1}} p_1(x)dx = I_T
+\]
+
+On calcule : \[ \begin{aligned}
+        I_T & = f(\alpha_i)\int_{\alpha_i}^{\alpha_{i+1}}\frac{x - \alpha_{i+1}}{\alpha_i-\alpha_{i+1}}dx + f(\alpha_{i+1})\int_{\alpha_i}^{\alpha_{i+1}}\frac{x - \alpha_i}{\alpha_{i+1} - \alpha_i}dx \\
+            & = \frac{f(\alpha_i)}{\alpha_i - \alpha_{i+1}}\left[\frac{1}{2}(x - \alpha_{i+1})^2\right]_{\alpha_i}^{\alpha_{i+1}} + \frac{f(\alpha_{i+1})}{\alpha_{i+1} - \alpha_i}\left[\frac{1}{2}(x-\alpha_i)^2\right]_{\alpha_i}^{\alpha_{i+1}} \\
+            & = (\alpha_{i+1} - \alpha_i)\frac{f(\alpha_i) + f(\alpha_{i+1})}{2}
+    \end{aligned}
+\]
+
+On a donc l'approximation suivante : \begin{equation}
+    \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx \approx (\alpha_{i+1} - \alpha_i)\frac{f(\alpha_i) + f(\alpha_{i+1})}{2}
+\end{equation}
+
+On peut montrer que c'est aussi une méthode d'ordre un, malgré le fait qu'elle donne un résultat différent de la méthode du point milieu.
 
 \subsection{Méthode de Simpson}
 On approche la fonction sur $[\alpha_i, \alpha_{i+1}]$ par un polynôme de degré 2, en considérent les deux points aux extrémités et le point milieu. On nomme ce polynôme $p_2(x)$.
@@ -96,14 +109,25 @@ On pose : \[ I_S = \int_{\alpha_i}^{\alpha_{i+1}} p_2(x)dx \]
 
 Afin de simplifier les calculs, on pose $u(x) = Ax+B$, et on effectue le changement de variable $f(x) = g \circ u(x)$. On veut $u(\alpha_i) = -1$ et $u(\alpha_{i+1}) = 1$. On trouve donc $A = \frac{2}{\alpha_{i+1} - \alpha_i}$ et $B = -\frac{\alpha_i + \alpha_{i+1}}{\alpha_{i+1} - \alpha_i}$
 
-Calculons : \[ \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx = \int_{\alpha_i}^{\alpha_{i+1}} g(u(x))dx = \frac{1}{A}\int_{-1}^1 g(u)du = \frac{\alpha_{i+1} - \alpha_{i}}{2} \int_{-1}^{1} g(u)du \]
+Effectuons le changement de variable :
+\[ \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx = \int_{\alpha_i}^{\alpha_{i+1}} g(u(x))dx = \frac{1}{A}\int_{-1}^1 g(u)du = \frac{\alpha_{i+1} - \alpha_{i}}{2} \int_{-1}^{1} g(u)du \]
 
-% TODO remplacer p_2' par \~{p_2}
-On cherche maintenant à exprimer $p_2'$ tel que $p_2 = p_2' \circ u$. On a :
-\[ p_2'(u) = \frac{1}{2}f(\alpha_i)u(u-1) + f\left(\frac{\alpha_i + \alpha_{i+1}}{2}\right)(u+1)(1-u) + \frac{1}{2}f(\alpha_{i+1})u(u+1) \]
+On cherche maintenant à exprimer $\tld{p_2}$ tel que $p_2 = \tld{p_2} \circ u$, $p_2$ étant obtenu par la méthode d'interpolation de Lagrange. On a :
+\[ \tld{p_2}(u) = \frac{1}{2}f(\alpha_i)u(u-1) + f\left(\frac{\alpha_i + \alpha_{i+1}}{2}\right)(u+1)(1-u) + \frac{1}{2}f(\alpha_{i+1})u(u+1) \]
 
-On peut donc calculer :
-% TODO
-\[ \int_{-1}^1 p_2'(u)du = \]
+On peut désormais calculer $I_S$ :
+\[  \begin{aligned}
+        I_S & = \int_{\alpha_i}^{\alpha_{i+1}} p_2(x)dx = \int_{-1}^1 \tld{p_2}(u)du \\
+            & = \frac{1}{2}f(\alpha_i)\int_{-1}^1 (u^2-u)du + f\left(\frac{\alpha_i+\alpha_{i+1}}{2}\right)\int_{-1}^1 (1-u^2)du + \frac{1}{2}f(\alpha_{i+1})\int_{-1}^1 (u^2+u)du \\
+            & = \frac{1}{2}f(\alpha_i)\left[\frac{1}{3}u^3-\frac{1}{2}u^2\right]_{-1}^1
+                    + f\left(\frac{\alpha_i+\alpha_{i+1}}{2}\right)\left[u-\frac{1}{3}u^3\right]_{-1}^1
+                    + \frac{1}{2}f(\alpha_{i+1})\left[\frac{1}{3}u^3+\frac{1}{2}u^2\right]_{-1}^1 \\
+            & = \frac{1}{3}f(\alpha_i) + \frac{4}{3}f\left(\frac{\alpha_i + \alpha_{i+1}}{2}\right) + \frac{1}{3}f(\alpha_{i+1})
+    \end{aligned}
+\]
+
+On obtient donc l'approximation suivante : \begin{equation}
+    \int_{\alpha_i}^{\alpha_{i+1}} f(x)dx \approx \frac{1}{3}f(\alpha_i) + \frac{4}{3}f\left(\frac{\alpha_i + \alpha_{i+1}}{2}\right) + \frac{1}{3}f(\alpha_{i+1})
+\end{equation}
 
 \end{document}
