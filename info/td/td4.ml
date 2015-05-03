@@ -106,3 +106,47 @@ fibo 6;;
 (* 8 produits par produit matriciel. 8 fois la complexité de l'exponantiation
  * rapide classique, d'où le résultat. *)
 
+(* Exercice 6 *)
+(* TODO *)
+
+(* Exercice 7 *)
+let pivot a b e =
+    let v = a.(b) in
+    let m = ref b in
+    for i = b + 1 to e do
+        if a.(i) < v then begin
+            let swp = ref a.(i) in
+            a.(i) <- a.(!m);
+            a.(!m) <- !swp;
+            m := !m + 1
+        end
+    done;
+    !m;;
+let tri_rapide l =
+    let rec quick a b = match b - a with
+           | x when x <= 0 -> ()
+           | _ -> let m = pivot l a b in
+                  if m == a then
+                      quick (m+1) b
+                  else begin
+                      quick a (m-1);
+                      quick m b;
+                  end
+    in quick 0 (vect_length l - 1);;
+let a = [| 2; 5; 6; 3; 4; 8; 9; 6; 4; 5; 2; 1; 3; 6; 7; 4 |];;
+tri_rapide a;;
+a;;
+
+(* Dans le pire des cas, pivot effectue (e - b) échanges. Dans ce cas,
+ * m = b - 1. tri_rapide va faire des appels successifs en décroissants de 1 à
+ * chaque fois. Si l'on imagine que le pire des cas est atteints à chaque
+ * itératio, la complexité est en O(n!).
+ *
+ * On suppose maintenant que pivot coupe la liste en 2 à chaque fois. Il y a
+ * dans ce cas ~n appels à pivot durant l'exécution. En considérant que pivot
+ * fait (b-e) comparaisons, on trouve une complexité quadratique (TODO on doit
+ * trouver en O(nln(n))).
+ *)
+
+(* TODO Version pour les listes *)
+
