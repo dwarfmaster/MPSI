@@ -1,5 +1,6 @@
+(* vim:set foldmethod=marker: *)
 
-(* Exercice 1 *)
+(* {{{ Exercice 1 *)
 let a = [|3; 5; 6; 4; 7|];;
 
 let sum a =
@@ -17,8 +18,9 @@ let divsum a =
     | _ -> let m = (i + j) / 2 in rdsum a i m + rdsum a (m + 1) j
     in rdsum a 0 (vect_length a - 1);;
 divsum a;;
+(* }}} *)
 
-(* Exercice 2 *)
+(* {{{ Exercice 2 *)
 (* On sépare le nombre de pièces en 3 paquets, on prend les deux premiers
  * paquets, et on compare leur poids. Si les deux paquets on le même poids,
  * la pièce est dans le troisième. Si les deux paquets n'ont pas le même poids,
@@ -26,8 +28,9 @@ divsum a;;
  * pièces à tester à chaque itération. Pour 3^p pièces, il faut donc p pesées.
  * Dans le cas général, il faut toujours ceil(log_3(n)) \pm 1 pesées.
  *)
+(* }}} *)
 
-(* Exercice 3 *)
+(* {{{ Exercice 3 *)
 let rec puissance x n = match n with
 | 0 -> 1.0
 | 1 -> x
@@ -51,8 +54,9 @@ let puissancer =
            | 2 -> rpow (x *. x *. x) (n / 3) (a *. x *. x)
     in rpow 1.0;;
 puissancer 2.0 10;;
+(* }}} *)
 
-(* Exercice 4 *)
+(* {{{ Exercice 4 *)
 let racine n =
     let s = ref 0 in
     while (!s * !s) <= n do
@@ -73,8 +77,9 @@ let racineDiv n =
     in rcdv 1 (n - 1);;
 racineDiv 26;;
 (* Complexité en O(log_2 n) *)
+(* }}} *)
 
-(* Exercice 5 *)
+(* {{{ Exercice 5 *)
 let produit_mat a b =
     [| [| a.(0).(0) * b.(0).(0) + a.(0).(1) * b.(1).(0);
           a.(0).(0) * b.(0).(1) + a.(0).(1) * b.(1).(1) |];
@@ -105,11 +110,9 @@ fibo 6;;
 
 (* 8 produits par produit matriciel. 8 fois la complexité de l'exponantiation
  * rapide classique, d'où le résultat. *)
+(* }}} *)
 
-(* Exercice 6 *)
-(* TODO *)
-
-(* Exercice 7 *)
+(* {{{ Exercice 7 *)
 let pivot a b e =
     let v = a.(b) in
     let m = ref b in
@@ -147,6 +150,71 @@ a;;
  * fait (b-e) comparaisons, on trouve une complexité quadratique (TODO on doit
  * trouver en O(nln(n))).
  *)
+(* }}} *)
 
-(* TODO Version pour les listes *)
+(* {{{ Exercice 9 *)
+(* Med3 : O(1) *)
+let med3 a j = match vect_length a - j with
+| 0 -> failwith " invalid med3 "
+| 1 -> a.(j)
+| 2 -> a.(j)
+| _ -> if     ((a.(j) < max a.(j+1) a.(j+2))
+           &&  (a.(j) > min a.(j+1) a.(j+2))) then a.(j)
+       else if ((a.(j+1) < max a.(j) a.(j+2))
+           &&   (a.(j+1) > min a.(j) a.(j+2))) then a.(j+1)
+                                               else a.(j+2);;
+
+(* Pseudom : O(e-b) *)
+let rec pseudom a b e = let n = e - b in match n with
+| 0 -> failwith " pseudom [| |] "
+| 1 -> a.(b)
+| _ -> let a2 = make_vect ((n+1) / 3) 0 in
+       for i = 0 to ((n+1) / 3 - 1) do
+           let j = i * 3 + b in
+           a2.(i) <- med3 a j
+       done;
+       pseudom a2 0 ((n+1) / 3);;
+pseudom [| 4; 1; 3; 6; 5; 2; 7; 8 |] 0 4;;
+
+let swap a i j =
+    let tmp = a.(i) in
+    a.(i) <- a.(j);
+    a.(j) <- tmp;;
+
+(* Permut : O(e-b) *)
+let permut a m b e =
+    let n = e - b in
+    let m1 = ref b and m2 = ref (e - 1) in
+    let i = ref b in
+    while !i <= !m2 do
+        if a.(!i) < m then begin
+            swap a !i !m1;
+            m1 := !m1 + 1;
+            i := !i + 1
+        end else if a.(!i) > m then begin
+            swap a !i !m2;
+            m2 := !m2 - 1
+        end else
+            i := !i + 1
+    done;
+    [|!m1 - 1; !m2 + 1|];;
+let a = [| 9; 4; 1; 3; 6; 5; 0; 2; 7; 8 |];;
+permut a 5 2 (vect_length a);;
+a;;
+
+(* gets : O(len a) *)
+let gets a s =
+    let rec rgets a s b e = match e - b with
+    | 0 -> failwith " rgets wrong end "
+    | 1 -> a.(b)
+    | _ -> let m = pseudom a b e in
+           let c = permut a m b e in
+           if s <= c.(0)      then rgets a s b     (c.(0) + 1)
+           else if s >= c.(1) then rgets a s c.(1) e
+           else a.(s)
+    in rgets a s 0 (vect_length a);;
+let a = [| 9; 4; 1; 3; 6; 5; 0; 2; 7; 8 |];;
+gets a 5;;
+
+(* }}} *)
 
