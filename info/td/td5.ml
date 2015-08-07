@@ -1,3 +1,4 @@
+(* vim:set foldmethod=marker: *)
 
 (* {{{ Exercice 1 *)
 let winr n p =
@@ -93,7 +94,7 @@ let mpath a =
 mpath a;;
 (* }}} *)
 
-(* Exercice 4 *)
+(* {{{ Exercice 4 *)
 let distance a b =
     let n1 = string_length a - 1 and n2 = string_length b - 1 in
     let m = make_matrix (n1+1) (n2+1) 0 in
@@ -115,6 +116,11 @@ let distance a b =
     m.(n1).(n2);;
 distance "niche" "chien";;
 
+let add_char s c =
+    let s2 = make_string 1 c in
+    s2 ^ s;;
+add_char "Hell" `o`;;
+
 let alignement a b =
     let n1 = string_length a - 1 and n2 = string_length b - 1 in
     let m = make_matrix (n1+1) (n2+1) 0 in
@@ -124,17 +130,48 @@ let alignement a b =
     for j = 1 to n2 do
         m.(0).(j) <- j;
     done;
-    let s1 = ref "" and s2 = ref "" in
     for i = 1 to n1 do
         for j = 1 to n2 do
             if a.[i-1] == b.[j-1] then
                 m.(i).(j) <- m.(i-1).(j-1)
-                (* TODO *)
             else
                 m.(i).(j) <- 1 + min m.(i).(j-1) 
-                                 (min m.(i-1).(j) m.(i-1).(j-1));
-                (* TODO *)
+                                 (min m.(i-1).(j) m.(i-1).(j-1))
         done;
     done;
+    let s1 = ref "" and s2 = ref "" in
+    let i = ref (n1 + 1) and j = ref (n2 + 1) in
+    while !i > 0 && !j > 0 do
+        if a.[!i-1] == b.[!j-1] then
+            begin
+                s1 := add_char !s1 a.[!i-1];
+                s2 := add_char !s2 a.[!i-1];
+                i := !i - 1;
+                j := !j - 1
+            end
+        else
+            if m.(!i).(!j) - 1 == m.(!i).(!j-1) then
+                begin
+                    s1 := add_char !s1 `-`;
+                    s2 := add_char !s2 b.[!j-1];
+                    j := !j - 1
+                end
+            else if m.(!i).(!j) - 1 == m.(!i-1).(!j) then
+                begin
+                    s1 := add_char !s1 a.[!i-1];
+                    s2 := add_char !s2 `-`;
+                    i := !i - 1
+                end
+            else
+                begin
+                    s1 := add_char !s1 a.[!i-1];
+                    s2 := add_char !s2 b.[!j-1];
+                    i := !i - 1;
+                    j := !j - 1
+                end;
+    done;
     (!s1, !s2);;
+alignement "niche" "chien";;
+
+(* }}} *)
 
